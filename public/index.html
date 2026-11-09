@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wox WhatsApp | كل مشاريعك في مكان واحد - لوحة تحكم العميل</title>
+  <meta name="description" content="منصة Wox WhatsApp من Ox Tech - لوحة تحكم العميل المتكاملة لإدارة اتصالات وأتمتة الواتساب.">
+  <link rel="icon" type="image/png" href="/images/wox-logo.png">
+  <link rel="stylesheet" href="/css/wox-design-system.css">
+  <link rel="stylesheet" href="/css/wox-saas.css?v=2.6">
+  <script>
+    (function() {
+      try {
+        var tokens = JSON.parse(localStorage.getItem('wox_tokens') || '{}');
+        if (!tokens.accessToken) {
+          window.location.href = '/login?redirect=/dashboard';
+        }
+      } catch (e) {
+        window.location.href = '/login?redirect=/dashboard';
+      }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Floating Toast Notification System -->
+  <div id="wox-toast-container"></div>
+
+  <!-- =========================================================================
+       MASTER DASHBOARD APPLICATION (Matching Reference Image 1:1)
+       ========================================================================= -->
+  <div class="wox-dashboard-app">
+
+    <!-- =======================================================================
+         1. DARK SIDEBAR (RIGHT SIDE)
+         ======================================================================= -->
+    <aside class="wox-sidebar">
+      <div>
+        <!-- Sidebar Brand Header -->
+        <a href="#" class="sidebar-brand-box" onclick="switchView('dashboard'); return false;">
+          <img src="/images/wox-logo.png" alt="Wox Logo" class="sidebar-logo-img" style="max-height: 58px; max-width: 215px; height: auto; width: auto; object-fit: contain; display: block; margin: 0 auto;">
+        </a>
+
+        <!-- 10 Navigation Menu Items (Clean SVG Icons - Zero Emojis) -->
+        <nav class="sidebar-nav-list">
+          <a class="sidebar-nav-item active" id="nav-dashboard" onclick="switchView('dashboard'); return false;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </span>
+            <span>الرئيسية</span>
+          </a>
+
+          <a class="sidebar-nav-item" id="nav-instances" onclick="switchView('instances'); return false;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></polygon></svg>
+            </span>
+            <span>الانستنتات</span>
+          </a>
+
+          <a class="sidebar-nav-item" id="nav-messages" onclick="switchView('messages'); return false;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            <span>الرسائل</span>
+          </a>
+
+          <a class="sidebar-nav-item" id="nav-templates" onclick="switchView('templates'); return false;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+            </span>
+            <span>القوالب</span>
+          </a>
+
+          <a class="sidebar-nav-item" id="nav-contacts" onclick="switchView('contacts'); return false;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </span>
+            <span>جهات الاتصال</span>
+          </a>
+
+          <a class="sidebar-nav-item" id="nav-webhooks" onclick="switchView('webhooks'); return false;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </span>
+            <span>الويب هوكس</span>
+          </a>
+
+          <a class="sidebar-nav-item" id="nav-automation" onclick="switchView('automation'); return false;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </span>
+            <span>الأتمتة</span>
+          </a>
+
+          <a class="sidebar-nav-item" id="nav-logs" onclick="switchView('logs'); return false;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </span>
+            <span>السجلات</span>
+          </a>
+
+          <a class="sidebar-nav-item" id="nav-developers" onclick="switchView('developers'); return false;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </span>
+            <span>المطورين</span>
+          </a>
+
+          <a class="sidebar-nav-item" id="nav-settings" onclick="switchView('settings'); return false;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </span>
+            <span>الإعدادات</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Bottom Sidebar Area: Upgrade Card & Support Link -->
+      <div>
+        <div class="sidebar-upgrade-card">
+          <div class="upgrade-card-header">
+            <span style="width: 18px; height: 18px; color: var(--wox-gold-btn); display: inline-flex;">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+            </span>
+            <span>تطوير أعمالك يبدأ من هنا</span>
+          </div>
+          <p class="upgrade-card-desc">خطط مرنة تناسب الشركات والمتاجر</p>
+          <button class="upgrade-btn" onclick="openUpgradeModal()">ترقية الخطة</button>
+        </div>
+
+        <a href="#support" class="sidebar-support-link" onclick="openSupportModal(); return false;">
+          <span style="width: 16px; height: 16px; display: inline-flex;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          </span>
+          <span>تحتاج مساعدة؟ تواصل مع الدعم الفني</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- =======================================================================
+         2. MAIN WORKSPACE CANVAS (RIGHT SIDE)
+         ======================================================================= -->
+    <main class="wox-canvas-main">
+
+      <!-- =====================================================================
+           Persistent Header Bar
+           ===================================================================== -->
+      <header class="canvas-header">
+        <!-- Search Bar with KBD badge on the LEFT -->
+        <div class="header-search-container">
+          <span class="search-kbd-badge">⌘ K</span>
+          <input type="text" id="global-search-input" class="search-input" placeholder="ابحث في الرسائل، جهات الاتصال، أو القوالب..." oninput="handleGlobalSearch(this.value)">
+        </div>
+
+        <!-- Right Controls: Notification, Language, Profile -->
+        <div class="header-controls">
+          <!-- Notification Bell -->
+          <button class="notification-btn" title="التنبيهات" onclick="toggleNotifications()">
+            <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notification-dot"></span>
+          </button>
+
+          <!-- Language Selector Pill (Pure Vector Saudi Flag SVG + العربية - Zero Emojis) -->
+          <button class="lang-selector-pill" onclick="showToast('تم ضبط اللغة: العربية (الافتراضية)')">
+            <svg class="flag-icon-svg" viewBox="0 0 24 16" width="20" height="14" style="border-radius: 2px; flex-shrink: 0;">
+              <rect width="24" height="16" fill="#006C35"/>
+              <path d="M4 11h16M7 7.5h10M9 5h6" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            <span>العربية</span>
+            <svg style="width: 14px; height: 14px; color: #7B7267;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+
+          <!-- User Profile -->
+          <div class="user-profile-badge" onclick="switchView('settings')">
+            <div class="user-info-col">
+              <span class="user-name-text">المستخدم</span>
+              <span class="user-role-text">مشترك جديد</span>
+            </div>
+            <img src="/images/wox-logo.png" alt="User Avatar" class="user-avatar-img">
+          </div>
+        </div>
+      </header>
+
+      <!-- =====================================================================
+           VIEW 1: الرئيسية (Master Dashboard - 1:1 Match with Reference)
+           ===================================================================== -->
+      <div id="view-dashboard" class="spa-view active">
+
+        <!-- Greeting Banner -->
+        <section class="greeting-landmark-card">
+          <div class="greeting-left-col">
+            <div class="greeting-title-row">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C59B6D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <h1 class="greeting-title">مرحبًا بك</h1>
+            </div>
+            <p class="greeting-subtitle">إليك نظرة سريعة على أداء واتساب ومشاريعك اليوم.</p>
+          </div>
+
+          <div class="greeting-right-col">
+            <div class="quran-quote-pill">
+              <div class="quote-ayah">{وَقُلِ اعْمَلُوا فَسَيَرَى اللَّهُ عَمَلَكُمْ}</div>
+              <div class="quote-subtext">بالتنظيم .. نصل لأبعد.</div>
+            </div>
+          </div>
+          <div class="landmark-watermark-bg"></div>
+        </section>
+
+        <!-- 4 KPI Stat Cards Row -->
+        <section class="kpi-row-grid">
+          <!-- Card 1 -->
+          <div class="stat-kpi-box">
+            <div class="stat-box-top">
+              <span class="stat-icon-wrapper green">
+                <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </span>
+              <span class="stat-main-number" id="kpi-sent-msgs">0</span>
+            </div>
+            <div class="stat-box-label">رسالة مرسلة اليوم</div>
+            <div class="stat-box-bottom">
+              <span class="stat-growth-tag">
+                <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                <span>0%</span>
+              </span>
+              <div class="mini-bars-chart">
+                <div class="mini-bar green-1"></div><div class="mini-bar green-2"></div><div class="mini-bar green-3"></div><div class="mini-bar green-4"></div><div class="mini-bar green-5"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="stat-kpi-box">
+            <div class="stat-box-top">
+              <span class="stat-icon-wrapper mint">
+                <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </span>
+              <span class="stat-main-number" id="kpi-received-msgs">0</span>
+            </div>
+            <div class="stat-box-label">رسالة مستلمة اليوم</div>
+            <div class="stat-box-bottom">
+              <span class="stat-growth-tag">
+                <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                <span>0%</span>
+              </span>
+              <div class="mini-bars-chart">
+                <div class="mini-bar green-1"></div><div class="mini-bar green-2"></div><div class="mini-bar green-3"></div><div class="mini-bar green-4"></div><div class="mini-bar green-5"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="stat-kpi-box">
+            <div class="stat-box-top">
+              <span class="stat-icon-wrapper tan">
+                <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </span>
+              <span class="stat-main-number" id="kpi-contacts-count">0</span>
+            </div>
+            <div class="stat-box-label">جهة اتصال نشطة</div>
+            <div class="stat-box-bottom">
+              <span class="stat-growth-tag" style="color: #9A6B43;">
+                <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                <span>0%</span>
+              </span>
+              <div class="mini-bars-chart">
+                <div class="mini-bar tan-1"></div><div class="mini-bar tan-2"></div><div class="mini-bar tan-3"></div><div class="mini-bar tan-4"></div><div class="mini-bar tan-5"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="stat-kpi-box">
+            <div class="stat-box-top">
+              <span class="stat-icon-wrapper blue">
+                <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></polygon></svg>
+              </span>
+              <span class="stat-main-number" id="kpi-instances-count">0</span>
+            </div>
+            <div class="stat-box-label">عدد الانستنتات</div>
+            <div class="stat-box-bottom">
+              <div class="stat-status-pills">
+                <span class="mini-status-pill online">
+                  <span class="pulse-dot green"></span>
+                  <span>0 متصل</span>
+                </span>
+                <span class="mini-status-pill offline">
+                  <span class="pulse-dot red"></span>
+                  <span>0 غير متصل</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2-Column Grid -->
+        <div class="two-col-dashboard-grid">
+          <!-- Left Column (Wide) -->
+          <div class="main-column-content">
+            <div class="instances-table-card">
+              <div class="card-header-bar">
+                <a class="card-view-all-link" onclick="switchView('instances')">
+                  <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                  <span>عرض الكل</span>
+                </a>
+                <span class="card-main-title">(WhatsApp Instances)</span>
+                <button class="btn-add-instance" onclick="openCreateInstanceModal()">
+                  <svg style="width: 15px; height: 15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <span>إضافة انستنس جديد</span>
+                </button>
+              </div>
+
+              <table class="wox-data-table">
+                <thead>
+                  <tr>
+                    <th>الإجراءات</th>
+                    <th>الرسائل اليوم</th>
+                    <th>آخر ظهور</th>
+                    <th>الحالة</th>
+                    <th>رقم الهاتف</th>
+                    <th>الاسم</th>
+                  </tr>
+                </thead>
+                <tbody id="instances-table-body">
+                  <!-- Rendered dynamically by JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Bottom Subgrid -->
+            <div class="bottom-left-subgrid">
+              <!-- Recent Messages -->
+              <div class="subcard-box">
+                <div class="card-header-bar">
+                  <a class="card-view-all-link" onclick="switchView('messages')">
+                    <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    <span>عرض الكل</span>
+                  </a>
+                  <span class="card-main-title">أحدث الرسائل</span>
+                </div>
+                <div class="recent-msg-list" id="dashboard-recent-msgs"></div>
+              </div>
+
+              <!-- Popular Templates -->
+              <div class="subcard-box">
+                <div class="card-header-bar">
+                  <a class="card-view-all-link" onclick="switchView('templates')">
+                    <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    <span>عرض الكل</span>
+                  </a>
+                  <span class="card-main-title">القوالب الشائعة</span>
+                </div>
+                <div class="templates-list" id="dashboard-templates-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="right-panel-stack">
+            <!-- Quick Send -->
+            <div class="quick-message-box">
+              <div class="quick-send-title">
+                <svg style="width: 19px; height: 19px; color: #16A34A;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <span>إرسال رسالة سريعة</span>
+              </div>
+
+              <form onsubmit="handleQuickSend(event)">
+                <div class="form-group-custom">
+                  <label class="field-label">اختر الانستنس</label>
+                  <div class="custom-select-trigger" onclick="cycleQuickSendInstance()">
+                    <svg style="width: 14px; height: 14px; color: #9CA3AF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span id="quick-selected-inst-label">المتجر الرئيسي (+966 5X XXX XXXX)</span>
+                      <span class="pulse-dot green"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group-custom">
+                  <label class="field-label">رقم المستلم</label>
+                  <div class="phone-input-combined">
+                    <div class="phone-country-addon">
+                      <svg class="flag-icon-svg" viewBox="0 0 24 16" width="18" height="12" style="border-radius: 2px;">
+                        <rect width="24" height="16" fill="#006C35"/>
+                        <path d="M4 11h16M7 7.5h10M9 5h6" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+                      </svg>
+                      <span style="direction: ltr; font-family: 'Inter';">+966</span>
+                      <svg style="width: 11px; height: 11px; color: #7B7267;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <input type="tel" id="quick-msg-phone" class="phone-raw-input" placeholder="5X XXX XXXX" required>
+                  </div>
+                </div>
+
+                <div class="form-group-custom">
+                  <label class="field-label">نص الرسالة</label>
+                  <div class="msg-textarea-wrapper">
+                    <textarea id="quick-msg-text" class="custom-msg-textarea" placeholder="اكتب رسالتك هنا ..." required></textarea>
+                    <div class="textarea-footer-icons">
+                      <div style="display: flex; gap: 10px;">
+                        <svg style="width: 17px; height: 17px; cursor: pointer; color: #8C8479;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                        <svg style="width: 17px; height: 17px; cursor: pointer; color: #8C8479;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                      </div>
+                      <svg style="width: 14px; height: 14px; color: #9CA3AF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn-send-now">إرسال الآن</button>
+              </form>
+            </div>
+
+            <!-- Monthly Usage -->
+            <div class="monthly-usage-card">
+              <div class="card-header-bar" style="margin-bottom: 10px;">
+                <a class="card-view-all-link" onclick="openUpgradeModal()">
+                  <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                  <span>عرض الكل</span>
+                </a>
+                <span class="card-main-title">الاستخدام الشهري</span>
+              </div>
+
+              <div class="usage-layout-row">
+                <div class="usage-stats-col">
+                  <div class="usage-stat-line">
+                    <span class="usage-dot green"></span>
+                    <span class="usage-stat-val">28,540</span>
+                    <span class="usage-stat-desc">رسائل مرسلة</span>
+                  </div>
+                  <div class="usage-stat-line">
+                    <span class="usage-dot cyan"></span>
+                    <span class="usage-stat-val">12,320</span>
+                    <span class="usage-stat-desc">رسائل مستلمة</span>
+                  </div>
+                  <div class="usage-stat-line">
+                    <span class="usage-dot blue"></span>
+                    <span class="usage-stat-val">320</span>
+                    <span class="usage-stat-desc">قوالب مستخدمة</span>
+                  </div>
+                  <div class="usage-stat-line">
+                    <span class="usage-dot dark"></span>
+                    <span class="usage-stat-val">4 / 10</span>
+                    <span class="usage-stat-desc">انستنتات نشطة</span>
+                  </div>
+                </div>
+
+                <div class="usage-ring-box">
+                  <svg class="usage-ring-svg" viewBox="0 0 100 100">
+                    <circle class="ring-circle-bg" cx="50" cy="50" r="42"/>
+                    <circle class="ring-circle-progress" cx="50" cy="50" r="42"/>
+                  </svg>
+                  <div class="ring-label-center">
+                    <span class="ring-percent-text">68%</span>
+                    <span class="ring-caption">من الحد المسموح</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Promo Banner -->
+            <div class="wox-promo-banner" onclick="openUpgradeModal()" style="cursor: pointer;">
+              <div class="promo-banner-text">
+                <h4>كل تواصل ... فرصة أكبر</h4>
+                <p>One WhatsApp. All Your Business.</p>
+              </div>
+              <div class="promo-banner-logo">
+                <span class="promo-logo-title">Wox</span>
+                <svg class="promo-logo-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm.01 1.67c4.54 0 8.24 3.7 8.24 8.24 0 2.2-.86 4.27-2.42 5.82a8.17 8.17 0 0 1-5.82 2.42c-1.42 0-2.82-.37-4.06-1.07l-.29-.16-3.08.81.82-3-.19-.31a8.16 8.16 0 0 1-1.24-4.31c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.66c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.38-.44.13-.14.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.56-1.36-.77-1.86-.2-.49-.42-.42-.56-.43l-.48-.01c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.78 2.72 4.31 3.81.6.26 1.07.42 1.44.54.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.2-.59.2-1.09.14-1.18-.06-.09-.23-.15-.48-.27z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- =====================================================================
+           VIEW 2: الانستنتات (WhatsApp Instances Management)
+           ===================================================================== -->
+      <div id="view-instances" class="spa-view">
+        <div class="page-hero-bar">
+          <div class="page-hero-actions">
+            <button class="btn-primary-action" onclick="openCreateInstanceModal()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>إضافة انستنس جديد</span>
+            </button>
+            <button class="btn-secondary-action" onclick="fetchInstancesStats()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              <span>تحديث الحالة</span>
+            </button>
+          </div>
+          <div class="page-hero-left">
+            <h2 class="page-hero-title">
+              <span>إدارة الانستنتات (WhatsApp Instances)</span>
+              <span class="pulse-dot green"></span>
+            </h2>
+            <p class="page-hero-desc">إدارة جلسات الواتساب، ومسح رمز الـ QR، وتتبع استهلاك كل رقم هاتف بشكل منفصل ومحمي.</p>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="instances-filter-bar">
+          <div class="filter-pills-group">
+            <button class="filter-pill-btn active" onclick="filterInstances('all', this)">الكل</button>
+            <button class="filter-pill-btn" onclick="filterInstances('connected', this)">متصل</button>
+            <button class="filter-pill-btn" onclick="filterInstances('disconnected', this)">غير متصل</button>
+          </div>
+          <span style="font-size: 13px; color: #64746F; font-weight: 600;">الحد الأقصى للباقة: 5 انستنتات</span>
+        </div>
+
+        <!-- Instances Cards Grid -->
+        <div class="instances-cards-grid" id="instances-full-grid"></div>
+      </div>
+
+      <!-- =====================================================================
+           VIEW 3: الرسائل (Live Chat & Messaging)
+           ===================================================================== -->
+      <div id="view-messages" class="spa-view">
+        <div class="page-hero-bar">
+          <div class="page-hero-actions">
+            <button class="btn-primary-action" onclick="showNewChatPrompt()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>محادثة جديدة</span>
+            </button>
+          </div>
+          <div class="page-hero-left">
+            <h2 class="page-hero-title">الرسائل والدردشة الحية (Live Chat)</h2>
+            <p class="page-hero-desc">استقبال وإرسال محادثات العملاء مباشرة عبر واتساب مع دعم المرفقات وعلامات القراءة.</p>
+          </div>
+        </div>
+
+        <!-- Split Chat Grid -->
+        <div class="chat-workspace-grid">
+          <!-- Left: Conversations List -->
+          <div class="chat-conversations-panel">
+            <div class="chat-panel-header">
+              <input type="text" class="chat-search-input" placeholder="ابحث بالاسم أو الرقم..." oninput="filterChatList(this.value)">
+            </div>
+            <!-- Chat Type Segmented Control (Toggle: الكل / محادثات / جروبات / قنوات) -->
+            <div class="chat-type-toggle-container">
+              <div class="chat-type-segmented-control">
+                <button class="chat-type-toggle-btn active" id="toggle-chat-all" onclick="setChatTypeFilter('all', this)" title="عرض جميع المحادثات">
+                  <span class="chat-type-label">الكل</span>
+                  <span class="chat-type-badge" id="chat-count-all">0</span>
+                </button>
+                <button class="chat-type-toggle-btn" id="toggle-chat-direct" onclick="setChatTypeFilter('direct', this)" title="المحادثات الخاصة الفردية">
+                  <svg class="chat-type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <span class="chat-type-label">محادثات</span>
+                  <span class="chat-type-badge" id="chat-count-direct">0</span>
+                </button>
+                <button class="chat-type-toggle-btn" id="toggle-chat-group" onclick="setChatTypeFilter('group', this)" title="مجموعات الواتساب">
+                  <svg class="chat-type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  <span class="chat-type-label">جروبات</span>
+                  <span class="chat-type-badge" id="chat-count-group">0</span>
+                </button>
+                <button class="chat-type-toggle-btn" id="toggle-chat-channel" onclick="setChatTypeFilter('channel', this)" title="قنوات ونشرات الواتساب">
+                  <svg class="chat-type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                  <span class="chat-type-label">قنوات</span>
+                  <span class="chat-type-badge" id="chat-count-channel">0</span>
+                </button>
+              </div>
+            </div>
+            <!-- Tag Filter Pills Bar -->
+            <div class="chat-tag-filter-wrapper">
+              <div class="chat-tag-filter-bar" id="chat-tag-filter-bar">
+                <button class="chat-tag-pill-filter active" onclick="filterChatsByTag('all', this)">
+                  <span>الكل</span>
+                  <span class="chat-tag-pill-count" id="tag-count-all">0</span>
+                </button>
+              </div>
+            </div>
+            <div class="chat-conv-list" id="chat-conv-list"></div>
+          </div>
+
+          <!-- Right: Active Chat Stream -->
+          <div class="chat-thread-panel">
+            <div class="chat-thread-header">
+              <!-- Left Actions: Tags & Chat Options -->
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <!-- Tag Pills for Active Customer -->
+                <div id="active-chat-tags-wrapper" style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;"></div>
+                <button class="btn-primary-action" style="padding: 4px 10px; font-size: 11px; height: 26px; border-radius: 6px;" onclick="openTagPickerModal()" title="إضافة أو تعديل تصنيفات العميل">
+                  <svg style="width: 12px; height: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <span>+ تصنيف</span>
+                </button>
+                <button class="action-icon-btn" title="حذف محادثة العميل" onclick="clearActiveChatMessages()">
+                  <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+
+              <!-- Right: Customer Info with Edit Name -->
+              <div style="display: flex; align-items: center; gap: 12px; direction: rtl;">
+                <div class="instance-wa-avatar" style="width: 38px; height: 38px;" id="active-chat-avatar">
+                  <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24 11.72 11.72 0 0 0 3.68.59 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.72 11.72 0 0 0 .59 3.68 1 1 0 0 1-.25 1.02l-2.22 2.09z"/></svg>
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span id="active-chat-name" style="font-size: 14px; font-weight: 800; color: #171E1B; cursor: pointer;" onclick="promptEditCustomerName()" title="اضغط لتعديل وحفظ اسم العميل">صندوق الرسائل</span>
+                    <button class="action-icon-btn" style="width: 20px; height: 20px; padding: 2px; border-radius: 4px;" onclick="promptEditCustomerName()" title="تعديل اسم العميل المسمى به">
+                      <svg style="width: 12px; height: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                    </button>
+                  </div>
+                  <div id="active-chat-phone" style="font-size: 11.5px; color: #64746F; font-family: 'Inter';">بانتظار اختيار عميل</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-thread-stream" id="chat-thread-stream"></div>
+
+            <form class="chat-input-bar" onsubmit="handleSendChatMessage(event)">
+              <button type="submit" class="btn-primary-action" style="padding: 10px 18px;">
+                <span>إرسال</span>
+                <svg style="width: 15px; height: 15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+              <input type="text" id="chat-input-field" class="chat-text-input" placeholder="اكتب رسالتك هنا واضغط Enter..." required>
+              <button type="button" class="action-icon-btn" title="إرفاق ملف" onclick="showToast('تم اختيار المرفق بنجاح')">
+                <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           VIEW 4: القوالب (Templates Manager)
+           ===================================================================== -->
+      <div id="view-templates" class="spa-view">
+        <div class="page-hero-bar">
+          <div class="page-hero-actions">
+            <button class="btn-primary-action" onclick="openCreateTemplateModal()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>إنشاء قالب جديد</span>
+            </button>
+          </div>
+          <div class="page-hero-left">
+            <h2 class="page-hero-title">قوالب الرسائل المعتمدة (Templates)</h2>
+            <p class="page-hero-desc">إعداد قوالب الرسائل الجاهزة مع دعم المتغيرات الديناميكية مثل اسم العميل ورقم الشحنة.</p>
+          </div>
+        </div>
+
+        <div class="templates-gallery-grid" id="templates-full-grid"></div>
+      </div>
+
+      <!-- =====================================================================
+           VIEW 5: جهات الاتصال (Contacts Directory)
+           ===================================================================== -->
+      <div id="view-contacts" class="spa-view">
+        <div class="page-hero-bar">
+          <div class="page-hero-actions">
+            <button class="btn-primary-action" onclick="openAddContactModal()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>إضافة جهة اتصال</span>
+            </button>
+            <button class="btn-secondary-action" onclick="exportContactsCSV()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>تصدير Excel/CSV</span>
+            </button>
+          </div>
+          <div class="page-hero-left">
+            <h2 class="page-hero-title">دليل جهات الاتصال (Contacts)</h2>
+            <p class="page-hero-desc">قاعدة بيانات العملاء والموردين مصنفة بالوسوم وأكواد الدول ومربوطة بأرقام الواتساب.</p>
+          </div>
+        </div>
+
+        <div class="contacts-table-card">
+          <table class="wox-data-table">
+            <thead>
+              <tr>
+                <th>الإجراء</th>
+                <th>تاريخ الإضافة</th>
+                <th>التصنيف</th>
+                <th>رقم الهاتف</th>
+                <th>الدولة</th>
+                <th>الاسم الكامل</th>
+              </tr>
+            </thead>
+            <tbody id="contacts-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           VIEW 6: الويب هوكس (Webhooks & Integrations)
+           ===================================================================== -->
+      <div id="view-webhooks" class="spa-view">
+        <div class="page-hero-bar">
+          <div class="page-hero-actions">
+            <button class="btn-primary-action" onclick="saveWebhookSettings()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              <span>حفظ إعدادات الويب هوك</span>
+            </button>
+          </div>
+          <div class="page-hero-left">
+            <h2 class="page-hero-title">الويب هوكس والربط البرمجي (Webhooks)</h2>
+            <p class="page-hero-desc">إرسال تنبيهات لحظية بجميع أحداث الواتساب إلى نظامك، متجرك (سلة/زد)، أو خوادمك السحابية.</p>
+          </div>
+        </div>
+
+        <div class="webhooks-config-grid">
+          <!-- Form -->
+          <div class="webhook-form-card">
+            <div class="form-group-custom">
+              <label class="field-label">رابط استقبال الويب هوك (Webhook Endpoint URL)</label>
+              <input type="url" id="webhook-url-input" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 9px 14px; background: #FAF9F5;" value="https://api.mybrand.com/v1/whatsapp/webhook">
+            </div>
+
+            <div class="form-group-custom">
+              <label class="field-label">المفتاح السري للتوقيع (Webhook Secret)</label>
+              <input type="text" id="webhook-secret-input" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 9px 14px; background: #FAF9F5;" value="whsec_oxtech_live_966_2025_signature">
+            </div>
+
+            <label class="field-label" style="margin-top: 16px;">الأحداث التي يتم إرسالها (Event Subscriptions)</label>
+            <div class="webhook-events-grid">
+              <label class="event-checkbox-label"><input type="checkbox" checked> <span>MESSAGES_UPSERT (رسائل جديدة)</span></label>
+              <label class="event-checkbox-label"><input type="checkbox" checked> <span>MESSAGES_UPDATE (تحديث حالة)</span></label>
+              <label class="event-checkbox-label"><input type="checkbox" checked> <span>CONNECTION_UPDATE (حالة الربط)</span></label>
+              <label class="event-checkbox-label"><input type="checkbox" checked> <span>QRCODE_UPDATED (تجديد QR)</span></label>
+              <label class="event-checkbox-label"><input type="checkbox"> <span>CHATS_SET (مزامنة المحادثات)</span></label>
+              <label class="event-checkbox-label"><input type="checkbox"> <span>CONTACTS_UPSERT (جهات اتصال)</span></label>
+            </div>
+          </div>
+
+          <!-- Test Card -->
+          <div class="webhook-test-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <span class="status-badge-pill connected" id="webhook-test-badge">جاهز للاختبار</span>
+              <span style="font-weight: 800; font-size: 15px; color: #171E1B;">اختبار إرسال الويب هوك</span>
+            </div>
+            <p style="font-size: 12px; color: #64746F; margin-bottom: 12px; direction: rtl; text-align: right;">أرسل حدثاً تجريبياً (Mock Event) للتأكد من استقبال الخادم للطلب بشكل صحيح وسريع.</p>
+            <button class="btn-primary-action" style="width: 100%; justify-content: center;" onclick="sendTestWebhookPing()">
+              <span>إرسال طلب تجريبي (Test Ping)</span>
+            </button>
+            <div class="code-terminal-box" id="webhook-log-output">// اضغط على الزر أعلاه لبدء الاختبار وعرض نتيجة الاستجابة اللحظية...</div>
+          </div>
+        </div>
+
+        <!-- E-Commerce Webhook URLs Card (Salla & Zid) -->
+        <div style="margin-top: 24px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <span class="status-badge-pill connected">جاهز للربط الفوري</span>
+            <div style="text-align: right;">
+              <h3 style="font-size: 16px; font-weight: 800; color: #171E1B; margin: 0;">روابط ويب هوك المتاجر الإلكترونية (سلة و زد وشوبيفاي)</h3>
+              <p style="font-size: 12.5px; color: var(--text-muted); margin: 4px 0 0 0;">انسخ الرابط الخاص بمتجرك والصقه في إعدادات التطبيق أو الويب هوك لإرسال تنبيهات السلات المتروكة والطلبات تلقائياً عبر واتساب.</p>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="background: #FAF9F5; border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <button class="btn-primary-action" style="padding: 4px 10px; font-size: 11px;" onclick="navigator.clipboard.writeText(document.getElementById('salla-webhook-url').value); showToast('تم نسخ رابط ويب هوك سلة');">نسخ الرابط</button>
+                <span style="font-weight: 700; font-size: 13px; color: #004D40;">رابط سلة (Salla Webhook)</span>
+              </div>
+              <input type="text" id="salla-webhook-url" readonly style="width: 100%; font-family: monospace; font-size: 11.5px; direction: ltr; padding: 6px 10px; border: 1px solid #DDD8CE; border-radius: 4px; background: #FFF;" value="/saas/ecommerce/webhook/ox_tenant/salla">
+            </div>
+            <div style="background: #FAF9F5; border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <button class="btn-primary-action" style="padding: 4px 10px; font-size: 11px;" onclick="navigator.clipboard.writeText(document.getElementById('zid-webhook-url').value); showToast('تم نسخ رابط ويب هوك زد');">نسخ الرابط</button>
+                <span style="font-weight: 700; font-size: 13px; color: #5B21B6;">رابط زد (Zid Webhook)</span>
+              </div>
+              <input type="text" id="zid-webhook-url" readonly style="width: 100%; font-family: monospace; font-size: 11.5px; direction: ltr; padding: 6px 10px; border: 1px solid #DDD8CE; border-radius: 4px; background: #FFF;" value="/saas/ecommerce/webhook/ox_tenant/zid">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           VIEW 7: الأتمتة (Automation & AI Bots)
+           ===================================================================== -->
+      <div id="view-automation" class="spa-view">
+        <div class="page-hero-bar">
+          <div class="page-hero-actions">
+            <button class="btn-primary-action" onclick="openAddRuleModal()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>إضافة رد تلقائي</span>
+            </button>
+          </div>
+          <div class="page-hero-left">
+            <h2 class="page-hero-title">الأتمتة والردود الذكية (Automation & Bots)</h2>
+            <p class="page-hero-desc">برمجة الردود التلقائية للكلمات المفتاحية وربط بوتات الذكاء الاصطناعي (ChatGPT / Typebot).</p>
+          </div>
+        </div>
+
+        <!-- AI Bots Cards -->
+        <h3 style="font-size: 16px; font-weight: 800; color: #171E1B; direction: rtl; text-align: right;">تكاملات الذكاء الاصطناعي (AI Integrations)</h3>
+        <div class="ai-bots-grid">
+          <!-- OpenAI Card -->
+          <div class="ai-bot-card">
+            <div class="bot-card-top">
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="toggleBotStatus('ChatGPT', this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 800; color: #171E1B;">OpenAI ChatGPT</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">GPT-4o الدعم الذكي الفوري</div>
+                </div>
+                <div class="stat-icon-wrapper green" style="width: 34px; height: 34px;">
+                  <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                </div>
+              </div>
+            </div>
+            <p style="font-size: 12px; color: #554D44; line-height: 1.4;">يرد آلياً على استفسارات العملاء والأسئلة الشائعة وفق كتالوج منتجات متجرك.</p>
+            <div style="font-size: 11.5px; font-weight: 700; color: #16A34A;">● يعمل بنجاح على المتجر الرئيسي</div>
+          </div>
+
+          <!-- Typebot Card -->
+          <div class="ai-bot-card">
+            <div class="bot-card-top">
+              <label class="toggle-switch">
+                <input type="checkbox" onchange="toggleBotStatus('Typebot', this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 800; color: #171E1B;">Typebot Chatbot</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">مسارات محادثة بصرية</div>
+                </div>
+                <div class="stat-icon-wrapper blue" style="width: 34px; height: 34px;">
+                  <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg>
+                </div>
+              </div>
+            </div>
+            <p style="font-size: 12px; color: #554D44; line-height: 1.4;">مسارات تفاعلية متسلسلة لجمع بيانات الطلبات وتقييم رضا العملاء خطوة بخطوة.</p>
+            <div style="font-size: 11.5px; font-weight: 700; color: #7B7267;">● غير مفعل</div>
+          </div>
+
+          <!-- Dify AI Card -->
+          <div class="ai-bot-card">
+            <div class="bot-card-top">
+              <label class="toggle-switch">
+                <input type="checkbox" onchange="toggleBotStatus('Dify', this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 800; color: #171E1B;">Dify AI Agent</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">وكلاء أتمتة العمليات</div>
+                </div>
+                <div class="stat-icon-wrapper tan" style="width: 34px; height: 34px;">
+                  <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                </div>
+              </div>
+            </div>
+            <p style="font-size: 12px; color: #554D44; line-height: 1.4;">ربط مساعد المبيعات الذكي مع قواعد بيانات المخزون وتتبع الشحنات المباشر.</p>
+            <div style="font-size: 11.5px; font-weight: 700; color: #7B7267;">● غير مفعل</div>
+          </div>
+        </div>
+
+        <!-- Rules Table -->
+        <div class="contacts-table-card" style="margin-top: 10px;">
+          <div class="card-header-bar">
+            <span class="status-badge-pill connected">4 قواعد نشطة</span>
+            <span class="card-main-title">قواعد الرد التلقائي بالكلمات المفتاحية (Keyword Rules)</span>
+          </div>
+          <table class="wox-data-table">
+            <thead>
+              <tr>
+                <th>الإجراءات</th>
+                <th>الحالة</th>
+                <th>الرد المبرمج</th>
+                <th>نوع المطابقة</th>
+                <th>الكلمة المفتاحية</th>
+              </tr>
+            </thead>
+            <tbody id="automation-rules-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           VIEW 8: السجلات (Logs & Audit Stream)
+           ===================================================================== -->
+      <div id="view-logs" class="spa-view">
+        <div class="page-hero-bar">
+          <div class="page-hero-actions">
+            <button class="btn-secondary-action" onclick="clearSystemLogs()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+              <span>تفريغ السجل</span>
+            </button>
+            <button class="btn-primary-action" onclick="refreshSystemLogs()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              <span>تحديث حي</span>
+            </button>
+          </div>
+          <div class="page-hero-left">
+            <h2 class="page-hero-title">سجلات النظام والرسائل (System & Delivery Logs)</h2>
+            <p class="page-hero-desc">سجل لحظي لجميع طلبات الـ API، والرسائل المرسلة والمستلمة، وحالات استجابة خوادم واتساب.</p>
+          </div>
+        </div>
+
+        <div class="logs-stream-card">
+          <table class="wox-data-table">
+            <thead>
+              <tr>
+                <th>التفاصيل</th>
+                <th>كود الاستجابة</th>
+                <th>الانستنس</th>
+                <th>الحدث</th>
+                <th>التوقيت</th>
+              </tr>
+            </thead>
+            <tbody id="logs-stream-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           VIEW 9: المطورين والـ API (Developer Hub)
+           ===================================================================== -->
+      <div id="view-developers" class="spa-view">
+        <div class="page-hero-bar">
+          <div class="page-hero-actions">
+            <button class="btn-primary-action" onclick="copyApiKey()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span>نسخ مفتاح API Key</span>
+            </button>
+          </div>
+          <div class="page-hero-left">
+            <h2 class="page-hero-title">بوابة المطورين والربط البرمجي (Developer Hub)</h2>
+            <p class="page-hero-desc">التوثيق البرمجي الكامل، واستخراج مفاتيح الاعتماد، ونماذج الأكواد بـ cURL و Node.js و Python و PHP.</p>
+          </div>
+        </div>
+
+        <!-- API Key Box -->
+        <div class="instances-table-card">
+          <div class="card-header-bar">
+            <button class="btn-secondary-action" onclick="generateNewApiKey()">توليد مفتاح جديد</button>
+            <span class="card-main-title">مفتاح المصادقة العام (Global API Key)</span>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #FAF8F4; border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 12px 18px; direction: ltr;">
+            <div style="font-family: 'Consolas', monospace; font-size: 13.5px; font-weight: 700; color: #171E1B;" id="api-key-display">
+              WOX_OXTECH_2025_SECURE_KEY
+            </div>
+            <button class="action-icon-btn" title="نسخ" onclick="copyApiKey()">
+              <svg style="width: 15px; height: 15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive Code Snippet -->
+        <div class="instances-table-card">
+          <div class="card-header-bar">
+            <button class="btn-secondary-action" onclick="copyDevCodeSnippet()">
+              <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span>نسخ الكود</span>
+            </button>
+            <div class="dev-tabs-bar">
+              <button class="dev-tab-btn active" onclick="switchDevTab('curl', this)">cURL</button>
+              <button class="dev-tab-btn" onclick="switchDevTab('nodejs', this)">Node.js</button>
+              <button class="dev-tab-btn" onclick="switchDevTab('python', this)">Python</button>
+              <button class="dev-tab-btn" onclick="switchDevTab('php', this)">PHP</button>
+            </div>
+            <span class="card-main-title">نموذج إرسال رسالة نصية (Send Text API)</span>
+          </div>
+          <pre class="code-terminal-box" id="dev-code-pre" style="min-height: 180px;"></pre>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           VIEW 10: الإعدادات (Settings & Account)
+           ===================================================================== -->
+      <div id="view-settings" class="spa-view">
+        <div class="page-hero-bar">
+          <div class="page-hero-actions">
+            <button class="btn-primary-action" onclick="saveSettingsForm()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg>
+              <span>حفظ التعديلات</span>
+            </button>
+          </div>
+          <div class="page-hero-left">
+            <h2 class="page-hero-title">إعدادات الحساب والمنصة (Settings)</h2>
+            <p class="page-hero-desc">إدارة بيانات المنشأة، الباقة الحالية، وأعضاء الفريق والصلاحيات.</p>
+          </div>
+        </div>
+
+        <div class="settings-sections-stack">
+          <!-- Profile Card -->
+          <div class="settings-card">
+            <h3 style="font-size: 16px; font-weight: 800; color: #171E1B; margin-bottom: 16px;">الملف التعريفي للشركة</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group-custom">
+                <label class="field-label">اسم المتجر / الشركة</label>
+                <input type="text" id="setting-store-name" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 8px 12px; background: #FAF9F5; direction: rtl; text-align: right;" placeholder="اسم متجرك أو شركتك" value="متجري">
+              </div>
+              <div class="form-group-custom">
+                <label class="field-label">البريد الإلكتروني الإداري</label>
+                <input type="email" id="setting-admin-email" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 8px 12px; background: #FAF9F5; direction: ltr;" placeholder="admin@example.com" value="">
+              </div>
+              <div class="form-group-custom">
+                <label class="field-label">الدولة الرئيسية</label>
+                <select class="custom-select-trigger" style="width: 100%;">
+                  <option selected>المملكة العربية السعودية (SAR)</option>
+                  <option>جمهورية مصر العربية (EGP)</option>
+                </select>
+              </div>
+              <div class="form-group-custom">
+                <label class="field-label">المنطقة الزمنية</label>
+                <input type="text" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 8px 12px; background: #FAF9F5; direction: ltr;" value="Asia/Riyadh (GMT+3)" readonly>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subscription Card -->
+          <div class="settings-card">
+            <div class="card-header-bar">
+              <button class="btn-primary-action" onclick="openUpgradeModal()">ترقية الباقة الآن</button>
+              <span class="card-main-title">تفاصيل باقة الاشتراك الحالية</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #FAF8F4; border-radius: var(--radius-sm); border: 1px solid #ECE7DB; direction: ltr;">
+              <div style="display: flex; gap: 20px; font-size: 13px; color: #554D44; direction: rtl;">
+                <span>الأجهزة النشطة: <strong id="setting-active-instances">0 من 5</strong></span>
+                <span>الرسائل المتبقية: <strong id="setting-remaining-msgs">1,000</strong></span>
+                <span>التجديد القادم: <strong id="setting-renew-date">بعد 14 يوماً</strong></span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px; direction: rtl;">
+                <span class="status-badge-pill connected" id="setting-plan-badge">باقة التجربة المجانية</span>
+                <span style="font-size: 18px; font-weight: 900; color: #171E1B; font-family: 'Inter';" id="setting-plan-price">مجاناً / 14 يوم</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           Bottom Footer Bar (Zero Emojis - Pure Vector Heart SVG)
+           ===================================================================== -->
+      <footer class="canvas-footer-bar">
+        <div class="footer-credits">
+          <strong>Wox</strong>
+          <span>v1.0.0</span>
+          <span>•</span>
+          <span>Evolution API العربية</span>
+          <span>•</span>
+          <span>مبني على المنظومة! صنع بحب</span>
+          <svg style="width: 14px; height: 14px; color: #EF4444; display: inline-flex;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+
+        <nav class="footer-nav-links">
+          <a href="#" class="footer-link" onclick="showToast('سياسة الخصوصية متوافقة مع الأنظمة السعودية والمصرية'); return false;">الخصوصية</a>
+          <a href="#" class="footer-link" onclick="showToast('شروط الخدمة والاستخدام التجاري المعتمد'); return false;">الشروط</a>
+          <a href="#" class="footer-link" onclick="openSupportModal(); return false;">المساعدة</a>
+          <a href="#" class="footer-link" onclick="openSupportModal(); return false;">تواصل معنا</a>
+        </nav>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       MODALS: (All Fully Dynamic with Zero Emojis)
+       ========================================================================= -->
+
+  <!-- 1. QR Code Scanner Modal -->
+  <div id="qr-scan-modal" class="modal-overlay">
+    <div class="modal-card" style="text-align: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="font-size: 19px; font-weight: 800; color: #171E1B;">مسح رمز الاستجابة السريعة (QR Code)</h3>
+        <button class="modal-close-btn" onclick="closeQrModal()" style="border: none; background: transparent; font-size: 20px; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+      <p id="qr-status-text" style="font-size: 13px; color: #64746F; margin-bottom: 16px;">جاري إعداد جلسة الاتصال وتوليد الرمز...</p>
+      
+      <div style="background: #FFFFFF; padding: 16px; border-radius: 12px; border: 2px dashed #22C55E; display: inline-block; margin-bottom: 16px;">
+        <img id="qr-code-img" src="" style="width: 250px; height: 250px; display: none; object-fit: contain; margin: 0 auto;">
+      </div>
+
+      <div style="font-size: 12.5px; color: #64746F; line-height: 1.6; margin-bottom: 12px;">
+        1. افتح تطبيق واتساب على هاتفك.<br>
+        2. اضغط على <strong>الأجهزة المرتبطة (Linked Devices)</strong>.<br>
+        3. وجه كاميرا الهاتف نحو الشاشة لمسح الرمز ضوئياً.
+      </div>
+
+      <button class="btn-secondary-action" style="margin: 0 auto; font-size: 12px; padding: 7px 16px; display: inline-flex; align-items: center; gap: 6px;" onclick="refreshCurrentQr()">
+        <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+        <span>تحديث رمز الـ QR</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. Create Instance Modal -->
+  <div id="create-instance-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <h3 style="font-size: 18px; font-weight: 800; color: #171E1B;">إضافة انستنس واتساب جديد</h3>
+        <button onclick="closeModal('create-instance-modal')" style="border: none; background: transparent; font-size: 20px; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+      <form onsubmit="handleCreateInstanceSubmit(event)">
+        <div class="form-group-custom">
+          <label class="field-label">اسم الانستنس التعريفي</label>
+          <input type="text" id="new-inst-name" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 8px 12px; background: #FAF9F5; direction: ltr;" placeholder="مثال: jeddah_branch" required>
+        </div>
+        <div class="form-group-custom">
+          <label class="field-label">وصف الجهاز / الفريق</label>
+          <input type="text" id="new-inst-desc" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 8px 12px; background: #FAF9F5; direction: rtl; text-align: right;" placeholder="مثال: خدمة عملاء فرع جدة" required>
+        </div>
+        <button type="submit" class="btn-send-now" style="margin-top: 14px;">تأكيد وتوليد QR Code</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Create Template Modal -->
+  <div id="create-template-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <h3 style="font-size: 18px; font-weight: 800; color: #171E1B;">إنشاء قالب رسالة جديد</h3>
+        <button onclick="closeModal('create-template-modal')" style="border: none; background: transparent; font-size: 20px; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+      <form onsubmit="handleCreateTemplateSubmit(event)">
+        <div class="form-group-custom">
+          <label class="field-label">عنوان القالب</label>
+          <input type="text" id="new-tpl-title" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 8px 12px; background: #FAF9F5; direction: rtl; text-align: right;" placeholder="مثال: تذكير بموعد الدفع" required>
+        </div>
+        <div class="form-group-custom">
+          <label class="field-label">معرف القالب البرمجي (Code Identifier)</label>
+          <input type="text" id="new-tpl-code" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 8px 12px; background: #FAF9F5; direction: ltr;" placeholder="payment_reminder" required>
+        </div>
+        <div class="form-group-custom">
+          <label class="field-label">نص القالب (يمكن استخدام المتغيرات {{1}}, {{2}})</label>
+          <textarea id="new-tpl-text" class="custom-msg-textarea" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 10px; background: #FAF9F5; height: 90px;" placeholder="مرحباً {{1}}، نود تذكيرك بموعد سداد فاتورة رقم {{2}} بمبلغ {{3}} ر.س." required></textarea>
+        </div>
+        <button type="submit" class="btn-send-now" style="margin-top: 14px;">حفظ وإضافة القالب</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Add Contact Modal -->
+  <div id="add-contact-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <h3 style="font-size: 18px; font-weight: 800; color: #171E1B;">إضافة جهة اتصال جديدة</h3>
+        <button onclick="closeModal('add-contact-modal')" style="border: none; background: transparent; font-size: 20px; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+      <form onsubmit="handleAddContactSubmit(event)">
+        <div class="form-group-custom">
+          <label class="field-label">الاسم الكامل</label>
+          <input type="text" id="new-contact-name" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 8px 12px; background: #FAF9F5; direction: rtl; text-align: right;" placeholder="مثال: فيصل الحربي" required>
+        </div>
+        <div class="form-group-custom">
+          <label class="field-label">رقم الهاتف (مع كود الدولة)</label>
+          <input type="tel" id="new-contact-phone" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 8px 12px; background: #FAF9F5; direction: ltr;" placeholder="+966 5X XXX XXXX" required>
+        </div>
+        <div class="form-group-custom">
+          <label class="field-label">التصنيف (Tag)</label>
+          <select id="new-contact-tag" class="custom-select-trigger" style="width: 100%;">
+            <option value="VIP">عميل مميز (VIP)</option>
+            <option value="متجر">صاحب متجر</option>
+            <option value="محتمل">عميل محتمل</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-send-now" style="margin-top: 14px;">حفظ في دليل جهات الاتصال</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Add Automation Rule Modal -->
+  <div id="add-rule-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <h3 style="font-size: 18px; font-weight: 800; color: #171E1B;">إضافة رد تلقائي ذكي</h3>
+        <button onclick="closeModal('add-rule-modal')" style="border: none; background: transparent; font-size: 20px; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+      <form onsubmit="handleAddRuleSubmit(event)">
+        <div class="form-group-custom">
+          <label class="field-label">الكلمة المفتاحية المستهدفة (Trigger Keyword)</label>
+          <input type="text" id="new-rule-keyword" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 8px 12px; background: #FAF9F5; direction: rtl; text-align: right;" placeholder="مثال: خصم، كوبون، استرجاع" required>
+        </div>
+        <div class="form-group-custom">
+          <label class="field-label">نوع المطابقة</label>
+          <select id="new-rule-match" class="custom-select-trigger" style="width: 100%;">
+            <option value="يحتوي">الرسالة تحتوي على الكلمة</option>
+            <option value="تطابق تام">تطابق تام للكلمة فقط</option>
+          </select>
+        </div>
+        <div class="form-group-custom">
+          <label class="field-label">نص الرد التلقائي</label>
+          <textarea id="new-rule-reply" class="custom-msg-textarea" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 10px; background: #FAF9F5; height: 80px;" placeholder="أهلاً بك! كود الخصم الحصري اليوم هو WOX15 يمنحك خصم 15%." required></textarea>
+        </div>
+        <button type="submit" class="btn-send-now" style="margin-top: 14px;">تفعيل قاعدة الرد الآلي</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. Upgrade Plan Modal -->
+  <div id="upgrade-plan-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 600px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="font-size: 20px; font-weight: 800; color: #171E1B;">ترقية باقة Wox WhatsApp</h3>
+        <button onclick="closeModal('upgrade-plan-modal')" style="border: none; background: transparent; font-size: 20px; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; direction: rtl;">
+        <!-- Starter -->
+        <div style="border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 14px; text-align: center; background: #FAF9F5;">
+          <h4 style="font-size: 14px; font-weight: 800;">البداية</h4>
+          <div style="font-size: 18px; font-weight: 900; color: #171E1B; margin: 8px 0; font-family: 'Inter';">99 ر.س</div>
+          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">1 انستنس<br>5,000 رسالة</p>
+          <button class="btn-secondary-action" style="width: 100%; margin-top: 10px; font-size: 11.5px;" onclick="selectPlan('Starter')">اختيار</button>
+        </div>
+
+        <!-- Growth (Active) -->
+        <div style="border: 2px solid var(--wox-green); border-radius: var(--radius-sm); padding: 14px; text-align: center; background: #FFFFFF; position: relative;">
+          <span style="position: absolute; top: -10px; right: 50%; transform: translateX(50%); background: var(--wox-green); color: white; font-size: 9.5px; font-weight: 800; padding: 2px 8px; border-radius: var(--radius-pill);">الحالية</span>
+          <h4 style="font-size: 14px; font-weight: 800;">النمو (Growth)</h4>
+          <div style="font-size: 18px; font-weight: 900; color: #171E1B; margin: 8px 0; font-family: 'Inter';">249 ر.س</div>
+          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">10 انستنتات<br>100,000 رسالة</p>
+          <button class="btn-primary-action" style="width: 100%; margin-top: 10px; font-size: 11.5px; justify-content: center;" disabled>مفعلة</button>
+        </div>
+
+        <!-- Enterprise -->
+        <div style="border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 14px; text-align: center; background: #FAF9F5;">
+          <h4 style="font-size: 14px; font-weight: 800;">المؤسسات</h4>
+          <div style="font-size: 18px; font-weight: 900; color: #171E1B; margin: 8px 0; font-family: 'Inter';">599 ر.س</div>
+          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">انستنتات غير محدودة<br>رسائل غير محدودة</p>
+          <button class="btn-secondary-action" style="width: 100%; margin-top: 10px; font-size: 11.5px;" onclick="selectPlan('Enterprise')">ترقية</button>
+        </div>
+      </div>
+
+      <p style="font-size: 12px; color: #64746F; text-align: center;">جميع الأسعار تشمل ضريبة القيمة المضافة (VAT) مع إمكانية الدفع عبر مدى، فيزا، وماستركارد.</p>
+    </div>
+  </div>
+
+  <!-- 7. Support Modal -->
+  <div id="support-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <h3 style="font-size: 18px; font-weight: 800; color: #171E1B;">الدعم الفني والمساعدة المباشرة</h3>
+        <button onclick="closeModal('support-modal')" style="border: none; background: transparent; font-size: 20px; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+      <p style="font-size: 13px; color: #64746F; line-height: 1.6; margin-bottom: 16px;">فريق الدعم الفني لـ Wox متاح على مدار الساعة لمساعدتك في ربط وتفعيل خطوط الواتساب ومتاجر سلة وزد.</p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn-primary-action" style="justify-content: center;" onclick="showToast('جاري فتح محادثة الدعم المباشرة مع مهندس المنظومة')">
+          <span>محادثة واتساب مباشرة مع الدعم (+966)</span>
+        </button>
+        <button class="btn-secondary-action" style="justify-content: center;" onclick="showToast('تم إرسال بطاقة طلب اتصال، سيتواصل معك فريقنا خلال 15 دقيقة')">
+          <span>طلب اتصال هاتفي فوري</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Customer Tags & Categorization Modal (Luxury SaaS Redesign) -->
+  <div id="customer-tags-modal" class="modal-overlay">
+    <div class="modal-card tags-luxury-card">
+      <!-- Modal Header -->
+      <div class="tags-modal-header">
+        <div class="tags-modal-title-group">
+          <div class="tags-modal-icon-box">
+            <svg style="width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          </div>
+          <div>
+            <h3 class="tags-modal-title">تصنيف وتنظيم العميل (Tags & CRM)</h3>
+            <p class="tags-modal-subtitle">اختر وسوماً ذكية لتصنيف مرحلة العميل وتسهيل المتابعة الفورية</p>
+          </div>
+        </div>
+        <button onclick="closeModal('customer-tags-modal')" style="border: none; background: #F4F1E8; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #4B5563; transition: all 0.2s;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+
+      <!-- Currently Assigned Customer Tags -->
+      <div class="current-tags-section">
+        <div class="current-tags-title">
+          <svg style="width: 14px; height: 14px; color: var(--wox-gold-btn);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span>الوسوم المفعلة حالياً على هذا العميل:</span>
+        </div>
+        <div class="current-tags-chips" id="modal-current-tags-container">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Preset Interactive Tag Cards Grid -->
+      <div style="font-size: 11.5px; font-weight: 800; color: #171E1B; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <span>اختر من التصنيفات الجاهزة (اضغط للتفعيل/الإلغاء):</span>
+        <span style="font-size: 10.5px; color: #8C847D; font-weight: 600;">متعدد الاختيارات</span>
+      </div>
+      <div class="tags-cards-grid" id="modal-tag-cards-grid">
+        <!-- Rendered dynamically with active checks & preset icons -->
+      </div>
+
+      <!-- Add New Custom Tag Form -->
+      <div style="margin-top: 14px;">
+        <label class="field-label" style="margin-bottom: 6px; font-size: 11.5px; font-weight: 800;">إضافة وسم مخصص جديد لمتجرك</label>
+        <div class="custom-tag-creator">
+          <button type="button" class="btn-primary-action" onclick="addCustomCustomerTag()" style="padding: 7px 16px; font-size: 11.5px; height: 34px; border-radius: 8px;">
+            <svg style="width: 12px; height: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>إضافة</span>
+          </button>
+          <input type="text" id="new-custom-tag-input" class="custom-tag-field" placeholder="اكتب اسم الوسم (مثال: عميل جملة، تسويق بالعمولة)..." onkeydown="if(event.key==='Enter'){addCustomCustomerTag();event.preventDefault();}">
+          <div class="custom-tag-color-dots" id="custom-tag-color-picker" title="اختر لون الوسم">
+            <span class="custom-tag-color-dot active" data-color="#B45309" style="background: #FEF3C7; border-color: #B45309;" onclick="selectCustomTagColor('#B45309', this)"></span>
+            <span class="custom-tag-color-dot" data-color="#15803D" style="background: #DCFCE7; border-color: #16A34A;" onclick="selectCustomTagColor('#15803D', this)"></span>
+            <span class="custom-tag-color-dot" data-color="#1D4ED8" style="background: #DBEAFE; border-color: #2563EB;" onclick="selectCustomTagColor('#1D4ED8', this)"></span>
+            <span class="custom-tag-color-dot" data-color="#7E22CE" style="background: #F3E8FF; border-color: #9333EA;" onclick="selectCustomTagColor('#7E22CE', this)"></span>
+            <span class="custom-tag-color-dot" data-color="#C2410C" style="background: #FFEDD5; border-color: #EA580C;" onclick="selectCustomTagColor('#C2410C', this)"></span>
+            <span class="custom-tag-color-dot" data-color="#B91C1C" style="background: #FEE2E2; border-color: #DC2626;" onclick="selectCustomTagColor('#B91C1C', this)"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div style="margin-top: 18px; display: flex; justify-content: flex-end; gap: 8px;">
+        <button type="button" class="btn-primary-action" style="padding: 9px 24px; font-size: 13px; height: 40px; border-radius: 10px; font-weight: 800; display: inline-flex; align-items: center; gap: 8px;" onclick="closeModal('customer-tags-modal')">
+          <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>حفظ وتطبيق التصنيفات</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Controller (Cache Buster) -->
+  <script src="/js/wox-branding.js"></script>
+  <script src="/js/wox-saas.js?v=2.5"></script>
+</body>
+</html>

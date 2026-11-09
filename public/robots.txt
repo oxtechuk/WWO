@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /landing
+Allow: /dashboard
+Disallow: /admin
+Disallow: /saas/admin/
+
+Sitemap: http://wox.oxtech.uk/sitemap.xml

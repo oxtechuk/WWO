@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول | Wox WhatsApp by Ox Tech</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/wox-saas.css">
+  <style>
+    body {
+      direction: rtl;
+      text-align: right;
+      background: #FAF8F5;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .auth-card-container {
+      width: 100%;
+      max-width: 440px;
+    }
+    .auth-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 28px;
+      text-decoration: none;
+    }
+    .auth-logo-box {
+      width: 44px;
+      height: 44px;
+      background: #25D366;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+    }
+    .auth-card {
+      background: #FFFFFF;
+      border: 1px solid #ECE7DE;
+      border-radius: 20px;
+      padding: 36px 32px;
+      box-shadow: 0 10px 30px rgba(28, 22, 19, 0.05);
+    }
+    .auth-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #1C1613;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .auth-subtitle {
+      font-size: 13px;
+      color: #7A746E;
+      margin-bottom: 26px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #38302A;
+      margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid #D8D2C6;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #FFFFFF;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #C59B6D;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background: #1C1613;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .btn-submit:hover {
+      background: #342822;
+      transform: translateY(-1px);
+    }
+    .auth-footer {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 13px;
+      color: #7A746E;
+    }
+    .auth-footer a {
+      color: #C59B6D;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+    .alert-box {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 18px;
+      display: none;
+    }
+    .alert-error {
+      background: #FEE2E2;
+      color: #DC2626;
+      border: 1px solid #FCA5A5;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-card-container">
+    <a href="/landing" class="auth-brand" style="display:flex; justify-content:center; text-decoration:none; margin-bottom:24px;">
+      <img src="/images/wox-logo.svg" alt="Wox WhatsApp" style="max-height:48px; max-width:210px; height:auto; width:auto; object-fit:contain; display:block;" onerror="this.onerror=null; this.src='/images/wox-logo.png';">
+    </a>
+
+    <div class="auth-card">
+      <h1 class="auth-title">تسجيل الدخول إلى حسابك</h1>
+      <p class="auth-subtitle">أهلاً بك مجدداً، أدخل بياناتك للوصول إلى لوحة التحكم</p>
+
+      <div id="alertBox" class="alert-box alert-error"></div>
+
+      <form onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label>البريد الإلكتروني للعمل:</label>
+          <input type="email" id="inputEmail" class="form-input" placeholder="name@company.com" required autofocus>
+        </div>
+
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label style="margin-bottom:0;">كلمة المرور:</label>
+            <a href="#" onclick="alert('يرجى مراجعة الدعم الفني لإعادة تعيين كلمة المرور')" style="font-size:12px; color:#C59B6D; text-decoration:none; font-weight:600;">نسيت كلمة المرور؟</a>
+          </div>
+          <input type="password" id="inputPassword" class="form-input" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" id="btnSubmit" class="btn-submit">
+          <span>دخول المنصة</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        ليس لديك حساب بعد؟ <a href="/register">أنشئ حسابك الآن (14 يوماً مجاناً)</a>
+      </div>
+
+      <div style="border-top:1px solid #F0ECE4; margin-top:20px; padding-top:16px; text-align:center;">
+        <a href="/landing" style="font-size:12px; color:#8C847D; text-decoration:none;">العودة لصفحة الهبوط الرئيسية</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const alertBox = document.getElementById('alertBox');
+      const btnSubmit = document.getElementById('btnSubmit');
+      const email = document.getElementById('inputEmail').value.trim();
+      const password = document.getElementById('inputPassword').value;
+
+      alertBox.style.display = 'none';
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = 'جاري التحقق والدخول...';
+
+      try {
+        const res = await fetch('/saas/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const json = await res.json();
+
+        if (json.status === 'success') {
+          localStorage.setItem('wox_user', JSON.stringify(json.data.user));
+          if (json.data.tenant) {
+            localStorage.setItem('wox_tenant', JSON.stringify(json.data.tenant));
+          }
+          if (json.data.tokens) {
+            localStorage.setItem('wox_tokens', JSON.stringify(json.data.tokens));
+          }
+
+          const urlParams = new URLSearchParams(window.location.search);
+          const redirect = urlParams.get('redirect');
+
+          // Role-based routing:
+          if (json.data.user.role === 'SUPER_ADMIN') {
+            window.location.href = redirect || '/admin';
+          } else {
+            window.location.href = redirect || '/dashboard';
+          }
+        } else {
+          alertBox.textContent = json.message || 'بيانات الدخول غير صحيحة';
+          alertBox.style.display = 'block';
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = 'دخول المنصة';
+        }
+      } catch (err) {
+        console.error(err);
+        alertBox.textContent = 'حدث خطأ في الاتصال بالخادم، يرجى المحاولة لاحقاً';
+        alertBox.style.display = 'block';
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = 'دخول المنصة';
+      }
+    }
+  </script>
+  <script src="/js/wox-branding.js"></script>
+</body>
+</html>

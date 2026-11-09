@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تهيئة مساحة عملك | Wox WhatsApp Onboarding Wizard</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/wox-saas.css">
+  <script>
+    (function() {
+      try {
+        var tokens = JSON.parse(localStorage.getItem('wox_tokens') || '{}');
+        if (!tokens.accessToken) {
+          window.location.href = '/login?redirect=/wizard';
+        }
+      } catch (e) {
+        window.location.href = '/login?redirect=/wizard';
+      }
+    })();
+  </script>
+  <style>
+    body {
+      direction: rtl;
+      text-align: right;
+      background: #FAF8F5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+    }
+    .wizard-container {
+      width: 100%;
+      max-width: 760px;
+    }
+    .wizard-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      text-decoration: none;
+    }
+    .wizard-logo-box {
+      width: 42px;
+      height: 42px;
+      background: #25D366;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+    }
+    .wizard-card {
+      background: #FFFFFF;
+      border: 1px solid #ECE7DE;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 10px 35px rgba(28, 22, 19, 0.05);
+    }
+    /* Steps Progress */
+    .steps-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      position: relative;
+    }
+    .steps-indicator::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      right: 40px;
+      left: 40px;
+      height: 2px;
+      background: #EBE6DC;
+      z-index: 1;
+    }
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      z-index: 2;
+    }
+    .step-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 2px solid #D8D2C6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: #7A746E;
+      transition: all 0.2s;
+    }
+    .step-item.active .step-circle {
+      border-color: #C59B6D;
+      background: #C59B6D;
+      color: #FFFFFF;
+      box-shadow: 0 0 0 4px rgba(197, 155, 109, 0.2);
+    }
+    .step-item.completed .step-circle {
+      border-color: #25D366;
+      background: #25D366;
+      color: #FFFFFF;
+    }
+    .step-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #7A746E;
+    }
+    .step-item.active .step-label {
+      color: #1C1613;
+    }
+    /* Step Content */
+    .step-pane {
+      display: none;
+    }
+    .step-pane.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .pane-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #1C1613;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .pane-desc {
+      font-size: 14px;
+      color: #7A746E;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    /* Selectable Choice Grid */
+    .choices-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .choice-card {
+      border: 2px solid #EBE6DC;
+      border-radius: 14px;
+      padding: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: #FAFAFA;
+      transition: all 0.2s;
+    }
+    .choice-card:hover {
+      border-color: #D8D2C6;
+      background: #FFFFFF;
+      transform: translateY(-2px);
+    }
+    .choice-card.selected {
+      border-color: #C59B6D;
+      background: #FFFFFF;
+      box-shadow: 0 4px 16px rgba(197, 155, 109, 0.15);
+    }
+    .choice-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: #F5F2EB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1C1613;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .choice-card.selected .choice-icon-box {
+      background: #C59B6D;
+      color: #FFFFFF;
+    }
+    .choice-content h4 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #1C1613;
+      margin-bottom: 4px;
+    }
+    .choice-content p {
+      font-size: 12px;
+      color: #7A746E;
+      line-height: 1.5;
+    }
+    /* Navigation buttons */
+    .wizard-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #F0ECE4;
+      padding-top: 24px;
+    }
+    .btn-wizard {
+      padding: 11px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-wizard-next {
+      background: #1C1613;
+      color: #FFFFFF;
+      margin-right: auto;
+    }
+    .btn-wizard-next:hover {
+      background: #342822;
+    }
+    .btn-wizard-prev {
+      background: transparent;
+      color: #7A746E;
+      border: 1px solid #D8D2C6;
+    }
+    .btn-wizard-prev:hover {
+      background: #F0ECE4;
+      color: #1C1613;
+    }
+    .btn-wizard-gold {
+      background: #C59B6D;
+      color: #FFFFFF;
+    }
+    .btn-wizard-gold:hover {
+      background: #AF8556;
+    }
+  </style>
+</head>
+<body>
+  <div class="wizard-container">
+    <!-- Brand -->
+    <a href="/landing" class="wizard-brand" style="display:flex; justify-content:center; text-decoration:none; margin-bottom:24px;">
+      <img src="/images/wox-logo.svg" alt="Wox WhatsApp" style="max-height:46px; max-width:200px; height:auto; width:auto; object-fit:contain; display:block;" onerror="this.onerror=null; this.src='/images/wox-logo.png';">
+    </a>
+
+    <div class="wizard-card">
+      <!-- Steps Indicator -->
+      <div class="steps-indicator">
+        <div class="step-item active" id="indStep1">
+          <div class="step-circle">1</div>
+          <div class="step-label">دورك ونشاطك</div>
+        </div>
+        <div class="step-item" id="indStep2">
+          <div class="step-circle">2</div>
+          <div class="step-label">مصدر المعرفة</div>
+        </div>
+        <div class="step-item" id="indStep3">
+          <div class="step-circle">3</div>
+          <div class="step-label">تكامل المتجر</div>
+        </div>
+        <div class="step-item" id="indStep4">
+          <div class="step-circle">4</div>
+          <div class="step-label">تفعيل الواتساب</div>
+        </div>
+      </div>
+
+      <!-- Step 1: Role / Persona -->
+      <div class="step-pane active" id="step1">
+        <h2 class="pane-title">أهلاً بك! ما هو دورك الأساسي في النشاط؟</h2>
+        <p class="pane-desc">سنقوم بتخصيص لوحة التحكم والإعدادات لتناسب طبيعة عملك اليومي بدقة.</p>
+
+        <div class="choices-grid">
+          <!-- Option 1 -->
+          <div class="choice-card selected" onclick="selectChoice('role', 'MERCHANT', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            </div>
+            <div class="choice-content">
+              <h4>صاحب عمل / تاجر</h4>
+              <p>أدير متجري أو شركتي وأريد زيادة المبيعات واستعادة السلات المتروكة.</p>
+            </div>
+          </div>
+
+          <!-- Option 2 -->
+          <div class="choice-card" onclick="selectChoice('role', 'MEDIA_BUYER', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            </div>
+            <div class="choice-content">
+              <h4>ميديا باير / مسوق رقمي</h4>
+              <p>أدير حملات إعلانية مدفوعة وأحتاج تتبع البكسل والتحويلات وربط الـ Leads.</p>
+            </div>
+          </div>
+
+          <!-- Option 3 -->
+          <div class="choice-card" onclick="selectChoice('role', 'DEVELOPER', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            </div>
+            <div class="choice-content">
+              <h4>مبرمج / مطور أنظمة</h4>
+              <p>أريد ربط واجهات الـ REST API والـ Webhooks مع موقع أو نظام CRM مخصص.</p>
+            </div>
+          </div>
+
+          <!-- Option 4 -->
+          <div class="choice-card" onclick="selectChoice('role', 'DESIGNER', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+            </div>
+            <div class="choice-content">
+              <h4>مصمم / مسؤول هوية</h4>
+              <p>أهتم بتنسيق وتصميم قوالب رسائل الواتساب التفاعلية وتجربة المستخدم.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-actions">
+          <div></div>
+          <button class="btn-wizard btn-wizard-next" onclick="goToStep(2)">
+            <span>المتابعة للخطوة التالية</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Source of Knowledge -->
+      <div class="step-pane" id="step2">
+        <h2 class="pane-title">من أين سمعت عن Wox WhatsApp؟</h2>
+        <p class="pane-desc">يساعدنا هذا في فهم القنوات الأفضل لدعم عملائنا في السعودية ومصر.</p>
+
+        <div class="choices-grid">
+          <div class="choice-card selected" onclick="selectChoice('source', 'GOOGLE_SEARCH', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <div class="choice-content">
+              <h4>بحث أو إعلانات جوجل</h4>
+              <p>عبر البحث عن حلول ربط واتساب أو إعلانات Google.</p>
+            </div>
+          </div>
+
+          <div class="choice-card" onclick="selectChoice('source', 'SNAPCHAT_ADS', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path></svg>
+            </div>
+            <div class="choice-content">
+              <h4>إعلانات سناب شات (Snapchat)</h4>
+              <p>شاهدت إعلاناً أو فيديو للمنصة في السعودية والخليج.</p>
+            </div>
+          </div>
+
+          <div class="choice-card" onclick="selectChoice('source', 'META_INSTA_FB', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path></svg>
+            </div>
+            <div class="choice-content">
+              <h4>إعلانات انستغرام وفيسبوك (Meta)</h4>
+              <p>عبر منشور ممول أو إعلان قصة في Instagram/Facebook.</p>
+            </div>
+          </div>
+
+          <div class="choice-card" onclick="selectChoice('source', 'TIKTOK_ADS', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+            </div>
+            <div class="choice-content">
+              <h4>إعلانات وتحديات تيك توك</h4>
+              <p>فيديو قصير أو حملة إعلانية على منصة TikTok.</p>
+            </div>
+          </div>
+
+          <div class="choice-card" onclick="selectChoice('source', 'SALLA_ZID_STORE', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <div class="choice-content">
+              <h4>متجر تطبيقات سلة أو زد</h4>
+              <p>من خلال تصفح التطبيقات والخدمات السحابية المعتمدة.</p>
+            </div>
+          </div>
+
+          <div class="choice-card" onclick="selectChoice('source', 'FRIEND_REFERRAL', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+            </div>
+            <div class="choice-content">
+              <h4>توصية من تاجر أو صديق</h4>
+              <p>نصحني أحد الزملاء أو التجار بتجربة Wox لفاعليتها.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn-wizard btn-wizard-prev" onclick="goToStep(1)">السابق</button>
+          <button class="btn-wizard btn-wizard-next" onclick="goToStep(3)">
+            <span>المتابعة</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Store Integration -->
+      <div class="step-pane" id="step3">
+        <h2 class="pane-title">ما هي المنصة الأساسية التي تريد ربطها؟</h2>
+        <p class="pane-desc">سنقوم بتجهيز قوالب التنبيهات ونظام الـ Webhook المناسب لمتجرك تلقائياً.</p>
+
+        <div class="choices-grid">
+          <div class="choice-card selected" onclick="selectChoice('platform', 'SALLA', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path></svg>
+            </div>
+            <div class="choice-content">
+              <h4>منصة سلة (Salla)</h4>
+              <p>استعادة السلات المتروكة، تنبيهات الشحن، وتأكيد الطلبات.</p>
+            </div>
+          </div>
+
+          <div class="choice-card" onclick="selectChoice('platform', 'ZID', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon></svg>
+            </div>
+            <div class="choice-content">
+              <h4>منصة زد (Zid)</h4>
+              <p>ربط Webhook زد، تحديث حالات الطلبات، وإرسال الفواتير.</p>
+            </div>
+          </div>
+
+          <div class="choice-card" onclick="selectChoice('platform', 'SHOPIFY_WOO', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            </div>
+            <div class="choice-content">
+              <h4>شوبيفاي أو ووكومرس (WooCommerce)</h4>
+              <p>ربط المتاجر العالمية وأتمتة رسائل الشراء بالـ API.</p>
+            </div>
+          </div>
+
+          <div class="choice-card" onclick="selectChoice('platform', 'CUSTOM_API', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            </div>
+            <div class="choice-content">
+              <h4>نظام CRM أو برمجة خاصة</h4>
+              <p>تكامل حر ومباشر عبر الـ REST API ومكتبات الربط.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn-wizard btn-wizard-prev" onclick="goToStep(2)">السابق</button>
+          <button class="btn-wizard btn-wizard-next" onclick="goToStep(4)">
+            <span>المتابعة للخطوة الأخيرة</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 4: WhatsApp Connection Mode -->
+      <div class="step-pane" id="step4">
+        <h2 class="pane-title">كيف ترغب في تشغيل خط الواتساب؟</h2>
+        <p class="pane-desc">يمكنك ربط رقمك الحالي خلال ثوانٍ أو شراء رقم افتراضي جاهز دون مسح QR.</p>
+
+        <div class="choices-grid">
+          <div class="choice-card selected" onclick="selectChoice('connectionMode', 'QR_SCAN', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            </div>
+            <div class="choice-content">
+              <h4>مسح كود QR برقم هاتفي الحالي</h4>
+              <p>ربط فوري ومباشر مع رقم واتساب المتجر الحالي عبر كاميرا الجوال.</p>
+            </div>
+          </div>
+
+          <div class="choice-card" onclick="selectChoice('connectionMode', 'VIRTUAL_NUMBER', this)">
+            <div class="choice-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </div>
+            <div class="choice-content">
+              <h4>شراء وتفعيل رقم افتراضي جاهز</h4>
+              <p>أرغب برقم سعودي أو مصري جاهز يعمل على السحابة دون استخدام هاتفي.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn-wizard btn-wizard-prev" onclick="goToStep(3)">السابق</button>
+          <button class="btn-wizard btn-wizard-gold" id="btnFinishWizard" onclick="finishWizard()">
+            <span>إتمام الإعداد والدخول للوحة التحكم</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/wox-pixels.js"></script>
+  <script>
+    const wizardState = {
+      role: 'MERCHANT',
+      source: 'GOOGLE_SEARCH',
+      platform: 'SALLA',
+      connectionMode: 'QR_SCAN',
+    };
+
+    function selectChoice(field, value, el) {
+      wizardState[field] = value;
+      const parent = el.closest('.choices-grid');
+      parent.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function goToStep(stepNum) {
+      // Hide all panes
+      for (let i = 1; i <= 4; i++) {
+        const pane = document.getElementById('step' + i);
+        const ind = document.getElementById('indStep' + i);
+        if (pane) pane.classList.remove('active');
+        if (ind) {
+          ind.classList.remove('active');
+          if (i < stepNum) {
+            ind.classList.add('completed');
+          } else {
+            ind.classList.remove('completed');
+          }
+        }
+      }
+
+      // Show targeted pane
+      const targetPane = document.getElementById('step' + stepNum);
+      const targetInd = document.getElementById('indStep' + stepNum);
+      if (targetPane) targetPane.classList.add('active');
+      if (targetInd) targetInd.classList.add('active');
+    }
+
+    function finishWizard() {
+      const btn = document.getElementById('btnFinishWizard');
+      btn.disabled = true;
+      btn.innerHTML = 'جاري تجهيز مساحة عملك...';
+
+      // Store wizard survey data
+      localStorage.setItem('wox_wizard_completed', 'true');
+      localStorage.setItem('wox_wizard_profile', JSON.stringify(wizardState));
+
+      // Track lead source event
+      if (window.WoxTracker) {
+        window.WoxTracker.trackLead('Wizard Profile (' + wizardState.role + ' - ' + wizardState.source + ')');
+      }
+
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 700);
+    }
+  </script>
+  <script src="/js/wox-branding.js"></script>
+</body>
+</html>

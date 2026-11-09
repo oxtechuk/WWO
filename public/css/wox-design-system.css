@@ -1,0 +1,160 @@
+/**
+ * 💎 Wox WhatsApp Enterprise Design System
+ * World-Class Theme, Tokens & Micro-Interactions
+ */
+
+:root {
+  /* Brand Color Palette */
+  --wox-primary: #10b981;
+  --wox-primary-hover: #059669;
+  --wox-primary-glow: rgba(16, 185, 129, 0.35);
+  
+  --wox-secondary: #3b82f6;
+  --wox-secondary-hover: #2563eb;
+  
+  --wox-accent: #8b5cf6;
+  --wox-accent-glow: rgba(139, 92, 246, 0.3);
+
+  --wox-danger: #ef4444;
+  --wox-warning: #f59e0b;
+  --wox-info: #06b6d4;
+
+  /* Surfaces & Backgrounds (Dark First) */
+  --bg-dark-900: #090d16;
+  --bg-dark-800: #0f172a;
+  --bg-dark-700: #1e293b;
+  --bg-dark-600: #334155;
+  
+  --glass-bg: rgba(15, 23, 42, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: blur(16px);
+
+  /* Typography */
+  --font-family-base: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Elevation Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  --shadow-glow: 0 0 25px var(--wox-primary-glow);
+
+  /* Transitions & Curves */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Glassmorphism Card System */
+.wox-glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-xl);
+  transition: transform var(--transition-spring), border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.wox-glass-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
+}
+
+/* Status Indicator Dot */
+.wox-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+.wox-status-dot.online {
+  background-color: var(--wox-primary);
+  box-shadow: 0 0 10px var(--wox-primary);
+}
+
+.wox-status-dot.online::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  border: 1px solid var(--wox-primary);
+  animation: pulse-ring 2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.wox-status-dot.offline {
+  background-color: var(--wox-danger);
+  box-shadow: 0 0 8px var(--wox-danger);
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(0.95); opacity: 0; }
+}
+
+/* Interactive Modern Buttons */
+.wox-btn-primary {
+  background: linear-gradient(135deg, var(--wox-primary) 0%, #059669 100%);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px var(--wox-primary-glow);
+  transition: all var(--transition-fast);
+}
+
+.wox-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--wox-primary-glow);
+  filter: brightness(1.08);
+}
+
+.wox-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Toast Notifications Container */
+#wox-toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.wox-toast {
+  pointer-events: auto;
+  min-width: 300px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #1e293b;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  animation: slide-in 0.3s ease-out;
+}
+
+@keyframes slide-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
