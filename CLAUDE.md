@@ -1,223 +1,131 @@
-# CLAUDE.md
+<laravel-boost-guidelines>
+=== foundation rules ===
 
-This file provides comprehensive guidance to Claude AI when working with the Evolution API codebase.
+# Laravel Boost Guidelines
 
-## Project Overview
+## Foundational Context
 
-**Evolution API** is a powerful, production-ready REST API for WhatsApp communication that supports multiple WhatsApp providers:
-- **Baileys** (WhatsApp Web) - Open-source WhatsApp Web client
-- **Meta Business API** - Official WhatsApp Business API
-- **Evolution API** - Custom WhatsApp integration
+This application is a Laravel application running on PHP 8.4. Always use the APIs that match the installed major version of each package — do not assume a version.
 
-Built with **Node.js 20+**, **TypeScript 5+**, and **Express.js**, it provides extensive integrations with chatbots, CRM systems, and messaging platforms in a **multi-tenant architecture**.
+Before relying on a package's API, confirm its installed version:
+- PHP packages: run `composer show --direct` to list direct dependencies with versions, or `composer show <vendor/package>` for a single package.
+- JS packages: check `package.json` for the installed versions.
 
-## Common Development Commands
+## Conventions
 
-### Build and Run
-```bash
-# Development
-npm run dev:server    # Run in development with hot reload (tsx watch)
+- You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
+- Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
+- Check for existing components to reuse before writing a new one.
 
-# Production
-npm run build        # TypeScript check + tsup build
-npm run start:prod   # Run production build
+## Verification Scripts
 
-# Direct execution
-npm start           # Run with tsx
-```
+- Do not create verification scripts or tinker when tests cover that functionality and prove they work. Unit and feature tests are more important.
 
-### Code Quality
-```bash
-npm run lint        # ESLint with auto-fix
-npm run lint:check  # ESLint check only
-npm run commit      # Interactive commit with commitizen
-```
+## Application Structure & Architecture
 
-### Database Management
-```bash
-# Set database provider first
-export DATABASE_PROVIDER=postgresql  # or mysql
+- Stick to existing directory structure; don't create new base folders without approval.
+- Do not change the application's dependencies without approval.
 
-# Generate Prisma client (automatically uses DATABASE_PROVIDER env)
-npm run db:generate
+## Frontend Bundling
 
-# Deploy migrations (production)
-npm run db:deploy      # Unix/Mac
-npm run db:deploy:win  # Windows
+- If a frontend change doesn't show in the UI or you get a "Unable to locate file in Vite manifest" error, run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
 
-# Development migrations (with sync to provider folder)
-npm run db:migrate:dev      # Unix/Mac
-npm run db:migrate:dev:win  # Windows
+## Documentation Files
 
-# Open Prisma Studio
-npm run db:studio
+- You must only create documentation files if explicitly requested by the user.
 
-# Development migrations
-npm run db:migrate:dev      # Unix/Mac
-npm run db:migrate:dev:win  # Windows
-```
+=== boost rules ===
 
-### Testing
-```bash
-npm test    # Run tests with watch mode
-```
+# Laravel Boost
 
-## Architecture Overview
+## Project Rules
 
-### Core Structure
-- **Multi-tenant SaaS**: Complete instance isolation with per-tenant authentication
-- **Multi-provider database**: PostgreSQL and MySQL via Prisma ORM with provider-specific schemas and migrations
-- **WhatsApp integrations**: Baileys, Meta Business API, and Evolution API with unified interface
-- **Event-driven architecture**: EventEmitter2 for internal events + WebSocket, RabbitMQ, SQS, NATS, Pusher for external events
-- **Microservices pattern**: Modular integrations for chatbots, storage, and external services
+- This project contains committed, area-grouped rules in `.ai/rules` when that directory exists, including path-scoped framework guidelines under `.ai/rules/boost`. Before you enter plan mode or create/edit any file, you MUST first: open @.ai/rules/index.md (it maps file globs to rule files), read every rule file whose globs cover the path(s) in scope, and run `grep -rin 'keyword' .ai/rules` to catch what a path match alone misses. Do not write code until you have read and are following every matching rule. If `.ai/rules` does not exist, continue without it.
 
-### Directory Layout
-```
-src/
-├── api/
-│   ├── controllers/     # HTTP route handlers (thin layer)
-│   ├── services/        # Business logic (core functionality)
-│   ├── repository/      # Data access layer (Prisma)
-│   ├── dto/            # Data Transfer Objects (simple classes)
-│   ├── guards/         # Authentication/authorization middleware
-│   ├── integrations/   # External service integrations
-│   │   ├── channel/    # WhatsApp providers (Baileys, Business API, Evolution)
-│   │   ├── chatbot/    # AI/Bot integrations (OpenAI, Dify, Typebot, Chatwoot)
-│   │   ├── event/      # Event systems (WebSocket, RabbitMQ, SQS, NATS, Pusher)
-│   │   └── storage/    # File storage (S3, MinIO)
-│   ├── routes/         # Express route definitions (RouterBroker pattern)
-│   └── types/          # TypeScript type definitions
-├── config/             # Environment and app configuration
-├── cache/             # Redis and local cache implementations
-├── exceptions/        # Custom HTTP exception classes
-├── utils/            # Shared utilities and helpers
-└── validate/         # JSONSchema7 validation schemas
-```
+## Artisan
 
-### Key Integration Points
+- Run Artisan commands directly via the command line (e.g., `php artisan route:list`). Use `php artisan list` to discover available commands and `php artisan [command] --help` to check parameters.
+- Inspect routes with `php artisan route:list`. Filter with: `--method=GET`, `--name=users`, `--path=api`, `--except-vendor`, `--only-vendor`.
+- Read configuration values using dot notation: `php artisan config:show app.name`, `php artisan config:show database.default`. Or read config files directly from the `config/` directory.
 
-**Channel Integrations** (`src/api/integrations/channel/`):
-- **Baileys**: WhatsApp Web client with QR code authentication
-- **Business API**: Official Meta WhatsApp Business API
-- **Evolution API**: Custom WhatsApp integration
-- Connection lifecycle management per instance with automatic reconnection
+## Tinker
 
-**Chatbot Integrations** (`src/api/integrations/chatbot/`):
-- **EvolutionBot**: Native chatbot with trigger system
-- **Chatwoot**: Customer service platform integration
-- **Typebot**: Visual chatbot flow builder
-- **OpenAI**: AI capabilities including GPT and Whisper (audio transcription)
-- **Dify**: AI agent workflow platform
-- **Flowise**: LangChain visual builder
-- **N8N**: Workflow automation platform
-- **EvoAI**: Custom AI integration
+- Execute PHP in app context for debugging and testing code. Do not create models without user approval, prefer tests with factories instead. Prefer existing Artisan commands over custom tinker code.
+- Always use single quotes to prevent shell expansion: `php artisan tinker --execute 'Your::code();'`
+  - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
 
-**Event Integrations** (`src/api/integrations/event/`):
-- **WebSocket**: Real-time Socket.io connections
-- **RabbitMQ**: Message queue for async processing
-- **Amazon SQS**: Cloud-based message queuing
-- **NATS**: High-performance messaging system
-- **Pusher**: Real-time push notifications
+=== php rules ===
 
-**Storage Integrations** (`src/api/integrations/storage/`):
-- **AWS S3**: Cloud object storage
-- **MinIO**: Self-hosted S3-compatible storage
-- Media file management and URL generation
+# PHP
 
-### Database Schema Management
-- Separate schema files: `postgresql-schema.prisma` and `mysql-schema.prisma`
-- Environment variable `DATABASE_PROVIDER` determines active database
-- Migration folders are provider-specific and auto-selected during deployment
+- Always use curly braces for control structures, even for single-line bodies.
+- Use PHP 8 constructor property promotion: `public function __construct(public GitHub $github) { }`. Do not leave empty zero-parameter `__construct()` methods unless the constructor is private.
+- Use explicit return type declarations and type hints for all method parameters: `function isAccessible(User $user, ?string $path = null): bool`
+- Use TitleCase for Enum keys: `FavoritePerson`, `BestLake`, `Monthly`.
+- Prefer PHPDoc blocks over inline comments. Only add inline comments for exceptionally complex logic.
+- Use array shape type definitions in PHPDoc blocks.
 
-### Authentication & Security
-- **API key-based authentication** via `apikey` header (global or per-instance)
-- **Instance-specific tokens** for WhatsApp connection authentication
-- **Guards system** for route protection and authorization
-- **Input validation** using JSONSchema7 with RouterBroker `dataValidate`
-- **Rate limiting** and security middleware
-- **Webhook signature validation** for external integrations
+=== deployments rules ===
 
-## Important Implementation Details
+# Deployment
 
-### WhatsApp Instance Management
-- Each WhatsApp connection is an "instance" with unique name
-- Instance data stored in database with connection state
-- Session persistence in database or file system (configurable)
-- Automatic reconnection handling with exponential backoff
+- Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
 
-### Message Queue Architecture
-- Supports RabbitMQ, Amazon SQS, and WebSocket for events
-- Event types: message.received, message.sent, connection.update, etc.
-- Configurable per instance which events to send
+=== tests rules ===
 
-### Media Handling
-- Local storage or S3/Minio for media files
-- Automatic media download from WhatsApp
-- Media URL generation for external access
-- Support for audio transcription via OpenAI
+# Test Enforcement
 
-### Multi-tenancy Support
-- Instance isolation at database level
-- Separate webhook configurations per instance
-- Independent integration settings per instance
+- Add or update tests for behavior and logic changes when a test provides meaningful regression coverage.
+- Pure copy, styling, and layout-only changes do not require new or updated tests.
+- When test coverage applies, run the affected tests and ensure they pass.
+- Test the changed behavior and its important failure modes, but do not add tests beyond them.
+- Read the `testing-best-practices` skill before writing tests.
 
-## Environment Configuration
+=== laravel/core rules ===
 
-Key environment variables are defined in `.env.example`. The system uses a strongly-typed configuration system via `src/config/env.config.ts`.
+# Do Things the Laravel Way
 
-Critical configurations:
-- `DATABASE_PROVIDER`: postgresql or mysql
-- `DATABASE_CONNECTION_URI`: Database connection string
-- `AUTHENTICATION_API_KEY`: Global API authentication
-- `REDIS_ENABLED`: Enable Redis cache
-- `RABBITMQ_ENABLED`/`SQS_ENABLED`: Message queue options
+- Use `php artisan make:` commands to create new files (i.e. migrations, controllers, models, etc.). You can list available Artisan commands using `php artisan list` and check their parameters with `php artisan [command] --help`.
+- If you're creating a generic PHP class, use `php artisan make:class`.
+- Pass `--no-interaction` to all Artisan commands to ensure they work without user input. You should also pass the correct `--options` to ensure correct behavior.
 
-## Development Guidelines
+### Model Creation
 
-The project follows comprehensive development standards defined in `.cursor/rules/`:
+- When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `php artisan make:model --help` to check the available options.
 
-### Core Principles
-- **Always respond in Portuguese (PT-BR)** for user communication
-- **Follow established architecture patterns** (Service Layer, RouterBroker, etc.)
-- **Robust error handling** with retry logic and graceful degradation
-- **Multi-database compatibility** (PostgreSQL and MySQL)
-- **Security-first approach** with input validation and rate limiting
-- **Performance optimizations** with Redis caching and connection pooling
+## APIs & Eloquent Resources
 
-### Code Standards
-- **TypeScript strict mode** with full type coverage
-- **JSONSchema7** for input validation (not class-validator)
-- **Conventional Commits** enforced by commitlint
-- **ESLint + Prettier** for code formatting
-- **Service Object pattern** for business logic
-- **RouterBroker pattern** for route handling with `dataValidate`
+- For APIs, default to using Eloquent API Resources and API versioning unless existing API routes do not, then you should follow existing application convention.
 
-### Architecture Patterns
-- **Multi-tenant isolation** at database and instance level
-- **Event-driven communication** with EventEmitter2
-- **Microservices integration** pattern for external services
-- **Connection pooling** and lifecycle management
-- **Caching strategy** with Redis primary and Node-cache fallback
+## URL Generation
 
-## Testing Approach
+- When generating links to other pages, prefer named routes and the `route()` function.
 
-Currently, the project has minimal formal testing infrastructure:
-- **Manual testing** is the primary approach
-- **Integration testing** in development environment
-- **No unit test suite** currently implemented
-- Test files can be placed in `test/` directory as `*.test.ts`
-- Run `npm test` for watch mode development testing
+## Testing
 
-### Recommended Testing Strategy
-- Focus on **critical business logic** in services
-- **Mock external dependencies** (WhatsApp APIs, databases)
-- **Integration tests** for API endpoints
-- **Manual testing** for WhatsApp connection flows
+- When creating models for tests, use the factories for the models. Check if the factory has custom states that can be used before manually setting up the model.
+- Faker: Use methods such as `$this->faker->word()` or `fake()->randomDigit()`. Follow existing conventions whether to use `$this->faker` or `fake()`.
+- When creating tests, make use of `php artisan make:test [options] {name}` to create a feature test, and pass `--unit` to create a unit test. Most tests should be feature tests.
 
-## Deployment Considerations
+=== pint/core rules ===
 
-- Docker support with `Dockerfile` and `docker-compose.yaml`
-- Graceful shutdown handling for connections
-- Health check endpoints for monitoring
-- Sentry integration for error tracking
-- Telemetry for usage analytics (non-sensitive data only)
+# Laravel Pint Code Formatter
+
+- If you have modified any PHP files, you must run `vendor/bin/pint --dirty --format agent` before finalizing changes to ensure your code matches the project's expected style.
+- Do not run `vendor/bin/pint --test --format agent`, simply run `vendor/bin/pint --format agent` to fix any formatting issues.
+
+=== phpunit/core rules ===
+
+# PHPUnit
+
+- This project uses PHPUnit. Create tests with `php artisan make:test --phpunit {name}`.
+- Do not include the test suite directory in `{name}`. Use `SomeFeatureTest`, not `Feature/SomeFeatureTest`.
+- Read the `testing-best-practices` skill for guidance on coverage, naming, structure, dependency isolation, and review.
+
+## Running Tests
+
+- Run the narrowest set of tests that covers the change. Pass a file path or `--filter=testName` to `php artisan test --compact`.
+- Rerun a test after each change to it.
+- Run `vendor/bin/phpunit` to call the test runner directly. It accepts the same file path and `--filter=testName` arguments.
+
+</laravel-boost-guidelines>

@@ -1,355 +1,101 @@
-# Evolution API - AI Agent Guidelines
+<laravel-boost-guidelines>
+=== foundation rules ===
 
-This document provides comprehensive guidelines for AI agents (Claude, GPT, Cursor, etc.) working with the Evolution API codebase.
+# Laravel Boost Guidelines
 
-## Project Overview
+## Foundational Context
 
-**Evolution API** is a production-ready, multi-tenant WhatsApp API platform built with Node.js, TypeScript, and Express.js. It supports multiple WhatsApp providers and extensive integrations with chatbots, CRM systems, and messaging platforms.
+This application is a Laravel application running on PHP 8.4. Always use the APIs that match the installed major version of each package — do not assume a version.
 
-## Project Structure & Module Organization
+Before relying on a package's API, confirm its installed version:
+- PHP packages: run `composer show --direct` to list direct dependencies with versions, or `composer show <vendor/package>` for a single package.
+- JS packages: check `package.json` for the installed versions.
 
-### Core Directories
-- **`src/`** – TypeScript source code with modular architecture
-  - `api/controllers/` – HTTP route handlers (thin layer)
-  - `api/services/` – Business logic (core functionality)
-  - `api/routes/` – Express route definitions (RouterBroker pattern)
-  - `api/integrations/` – External service integrations
-    - `channel/` – WhatsApp providers (Baileys, Business API, Evolution)
-    - `chatbot/` – AI/Bot integrations (OpenAI, Dify, Typebot, Chatwoot)
-    - `event/` – Event systems (WebSocket, RabbitMQ, SQS, NATS, Pusher)
-    - `storage/` – File storage (S3, MinIO)
-  - `dto/` – Data Transfer Objects (simple classes, no decorators)
-  - `guards/` – Authentication/authorization middleware
-  - `types/` – TypeScript type definitions
-  - `repository/` – Data access layer (Prisma)
-- **`prisma/`** – Database schemas and migrations
-  - `postgresql-schema.prisma` / `mysql-schema.prisma` – Provider-specific schemas
-  - `postgresql-migrations/` / `mysql-migrations/` – Provider-specific migrations
-- **`config/`** – Environment and application configuration
-- **`utils/`** – Shared utilities and helper functions
-- **`validate/`** – JSONSchema7 validation schemas
-- **`exceptions/`** – Custom HTTP exception classes
-- **`cache/`** – Redis and local cache implementations
+## Conventions
 
-### Build & Deployment
-- **`dist/`** – Build output (do not edit directly)
-- **`public/`** – Static assets and media files
-- **`Docker*`**, **`docker-compose*.yaml`** – Containerization and local development stack
+- You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
+- Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
+- Check for existing components to reuse before writing a new one.
 
-## Build, Test, and Development Commands
+## Verification Scripts
 
-### Development Workflow
-```bash
-# Development server with hot reload
-npm run dev:server
+- Do not create verification scripts or tinker when tests cover that functionality and prove they work. Unit and feature tests are more important.
 
-# Direct execution for testing
-npm start
+## Application Structure & Architecture
 
-# Production build and run
-npm run build
-npm run start:prod
-```
+- Stick to existing directory structure; don't create new base folders without approval.
+- Do not change the application's dependencies without approval.
 
-### Code Quality
-```bash
-# Linting and formatting
-npm run lint        # ESLint with auto-fix
-npm run lint:check  # ESLint check only
+## Frontend Bundling
 
-# Commit with conventional commits
-npm run commit      # Interactive commit with Commitizen
-```
+- If a frontend change doesn't show in the UI or you get a "Unable to locate file in Vite manifest" error, run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
 
-### Database Management
-```bash
-# Set database provider first (CRITICAL)
-export DATABASE_PROVIDER=postgresql  # or mysql
+## Documentation Files
 
-# Generate Prisma client
-npm run db:generate
+- You must only create documentation files if explicitly requested by the user.
 
-# Development migrations (with provider sync)
-npm run db:migrate:dev      # Unix/Mac
-npm run db:migrate:dev:win  # Windows
+=== boost rules ===
 
-# Production deployment
-npm run db:deploy      # Unix/Mac
-npm run db:deploy:win  # Windows
+# Laravel Boost
 
-# Database tools
-npm run db:studio      # Open Prisma Studio
-```
+## Project Rules
 
-### Docker Development
-```bash
-# Start local services (Redis, PostgreSQL, etc.)
-docker-compose up -d
+- This project contains committed, area-grouped rules in `.ai/rules` when that directory exists, including path-scoped framework guidelines under `.ai/rules/boost`. Before you enter plan mode or create/edit any file, you MUST first: open @.ai/rules/index.md (it maps file globs to rule files), read every rule file whose globs cover the path(s) in scope, and run `grep -rin 'keyword' .ai/rules` to catch what a path match alone misses. Do not write code until you have read and are following every matching rule. If `.ai/rules` does not exist, continue without it.
 
-# Full development stack
-docker-compose -f docker-compose.dev.yaml up -d
-```
+## Artisan
 
-## Coding Standards & Architecture Patterns
+- Run Artisan commands directly via the command line (e.g., `php artisan route:list`). Use `php artisan list` to discover available commands and `php artisan [command] --help` to check parameters.
+- Inspect routes with `php artisan route:list`. Filter with: `--method=GET`, `--name=users`, `--path=api`, `--except-vendor`, `--only-vendor`.
+- Read configuration values using dot notation: `php artisan config:show app.name`, `php artisan config:show database.default`. Or read config files directly from the `config/` directory.
 
-### Code Style (Enforced by ESLint + Prettier)
-- **TypeScript strict mode** with full type coverage
-- **2-space indentation**, single quotes, trailing commas
-- **120-character line limit**
-- **Import order** via `simple-import-sort`
-- **File naming**: `feature.kind.ts` (e.g., `whatsapp.baileys.service.ts`)
-- **Naming conventions**:
-  - Classes: `PascalCase`
-  - Functions/variables: `camelCase`
-  - Constants: `UPPER_SNAKE_CASE`
-  - Files: `kebab-case.type.ts`
+## Tinker
 
-### Architecture Patterns
+- Execute PHP in app context for debugging and testing code. Do not create models without user approval, prefer tests with factories instead. Prefer existing Artisan commands over custom tinker code.
+- Always use single quotes to prevent shell expansion: `php artisan tinker --execute 'Your::code();'`
+  - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
 
-#### Service Layer Pattern
-```typescript
-export class ExampleService {
-  constructor(private readonly waMonitor: WAMonitoringService) {}
-  
-  private readonly logger = new Logger('ExampleService');
-  
-  public async create(instance: InstanceDto, data: ExampleDto) {
-    // Business logic here
-    return { example: { ...instance, data } };
-  }
-  
-  public async find(instance: InstanceDto): Promise<ExampleDto | null> {
-    try {
-      const result = await this.waMonitor.waInstances[instance.instanceName].findData();
-      return result || null; // Return null on not found (Evolution pattern)
-    } catch (error) {
-      this.logger.error('Error finding data:', error);
-      return null; // Return null on error (Evolution pattern)
-    }
-  }
-}
-```
+=== php rules ===
 
-#### Controller Pattern (Thin Layer)
-```typescript
-export class ExampleController {
-  constructor(private readonly exampleService: ExampleService) {}
-  
-  public async createExample(instance: InstanceDto, data: ExampleDto) {
-    return this.exampleService.create(instance, data);
-  }
-}
-```
+# PHP
 
-#### RouterBroker Pattern
-```typescript
-export class ExampleRouter extends RouterBroker {
-  constructor(...guards: any[]) {
-    super();
-    this.router.post(this.routerPath('create'), ...guards, async (req, res) => {
-      const response = await this.dataValidate<ExampleDto>({
-        request: req,
-        schema: exampleSchema, // JSONSchema7
-        ClassRef: ExampleDto,
-        execute: (instance, data) => controller.createExample(instance, data),
-      });
-      res.status(201).json(response);
-    });
-  }
-}
-```
+- Always use curly braces for control structures, even for single-line bodies.
+- Use PHP 8 constructor property promotion: `public function __construct(public GitHub $github) { }`. Do not leave empty zero-parameter `__construct()` methods unless the constructor is private.
+- Use explicit return type declarations and type hints for all method parameters: `function isAccessible(User $user, ?string $path = null): bool`
+- Use TitleCase for Enum keys: `FavoritePerson`, `BestLake`, `Monthly`.
+- Prefer PHPDoc blocks over inline comments. Only add inline comments for exceptionally complex logic.
+- Use array shape type definitions in PHPDoc blocks.
 
-#### DTO Pattern (Simple Classes)
-```typescript
-// CORRECT - Evolution API pattern (no decorators)
-export class ExampleDto {
-  name: string;
-  description?: string;
-  enabled: boolean;
-}
+=== deployments rules ===
 
-// INCORRECT - Don't use class-validator decorators
-export class BadExampleDto {
-  @IsString() // ❌ Evolution API doesn't use decorators
-  name: string;
-}
-```
+# Deployment
 
-#### Validation Pattern (JSONSchema7)
-```typescript
-import { JSONSchema7 } from 'json-schema';
-import { v4 } from 'uuid';
+- Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
 
-export const exampleSchema: JSONSchema7 = {
-  $id: v4(),
-  type: 'object',
-  properties: {
-    name: { type: 'string' },
-    description: { type: 'string' },
-    enabled: { type: 'boolean' },
-  },
-  required: ['name', 'enabled'],
-};
-```
+=== tests rules ===
 
-## Multi-Tenant Architecture
+# Test Enforcement
 
-### Instance Isolation
-- **CRITICAL**: All operations must be scoped by `instanceName` or `instanceId`
-- **Database queries**: Always include `where: { instanceId: ... }`
-- **Authentication**: Validate instance ownership before operations
-- **Data isolation**: Complete separation between tenant instances
+- Add or update tests for behavior and logic changes when a test provides meaningful regression coverage.
+- Pure copy, styling, and layout-only changes do not require new or updated tests.
+- When test coverage applies, run the affected tests and ensure they pass.
+- Test the changed behavior and its important failure modes, but do not add tests beyond them.
+- Read the `testing-best-practices` skill before writing tests.
 
-### WhatsApp Instance Management
-```typescript
-// Access instance via WAMonitoringService
-const waInstance = this.waMonitor.waInstances[instance.instanceName];
-if (!waInstance) {
-  throw new NotFoundException(`Instance ${instance.instanceName} not found`);
-}
-```
+=== laravel/core rules ===
 
-## Database Patterns
+# Do Things the Laravel Way
 
-### Multi-Provider Support
-- **PostgreSQL**: Uses `@db.Integer`, `@db.JsonB`, `@default(now())`
-- **MySQL**: Uses `@db.Int`, `@db.Json`, `@default(now())`
-- **Environment**: Set `DATABASE_PROVIDER=postgresql` or `mysql`
-- **Migrations**: Provider-specific folders auto-selected
+- Use `php artisan make:` commands to create new files (i.e. migrations, controllers, models, etc.). You can list available Artisan commands using `php artisan list` and check their parameters with `php artisan [command] --help`.
+- If you're creating a generic PHP class, use `php artisan make:class`.
+- Pass `--no-interaction` to all Artisan commands to ensure they work without user input. You should also pass the correct `--options` to ensure correct behavior.
 
-### Prisma Repository Pattern
-```typescript
-// Always use PrismaRepository for database operations
-const result = await this.prismaRepository.instance.findUnique({
-  where: { name: instanceName },
-});
-```
+### Model Creation
 
-## Integration Patterns
+- When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `php artisan make:model --help` to check the available options.
 
-### Channel Integration (WhatsApp Providers)
-- **Baileys**: WhatsApp Web with QR code authentication
-- **Business API**: Official Meta WhatsApp Business API  
-- **Evolution API**: Custom WhatsApp integration
-- **Pattern**: Extend base channel service classes
+## APIs & Eloquent Resources
 
-### Chatbot Integration
-- **Base classes**: Extend `BaseChatbotService` and `BaseChatbotController`
-- **Trigger system**: Support keyword, regex, and advanced triggers
-- **Session management**: Handle conversation state per user
-- **Available integrations**: EvolutionBot, OpenAI, Dify, Typebot, Chatwoot, Flowise, N8N, EvoAI
+- For APIs, default to using Eloquent API Resources and API versioning unless existing API routes do not, then you should follow existing application convention.
 
-### Event Integration
-- **Internal events**: EventEmitter2 for application events
-- **External events**: WebSocket, RabbitMQ, SQS, NATS, Pusher
-- **Webhook delivery**: Reliable delivery with retry logic
-
-## Testing Guidelines
-
-### Current State
-- **No formal test suite** currently implemented
-- **Manual testing** is the primary approach
-- **Integration testing** in development environment
-
-### Testing Strategy
-```typescript
-// Place tests in test/ directory as *.test.ts
-// Run: npm test (watches test/all.test.ts)
-
-describe('ExampleService', () => {
-  it('should create example', async () => {
-    // Mock external dependencies
-    // Test business logic
-    // Assert expected behavior
-  });
-});
-```
-
-### Recommended Approach
-- Focus on **critical business logic** in services
-- **Mock external dependencies** (WhatsApp APIs, databases)
-- **Integration tests** for API endpoints
-- **Manual testing** for WhatsApp connection flows
-
-## Commit & Pull Request Guidelines
-
-### Conventional Commits (Enforced by commitlint)
-```bash
-# Use interactive commit tool
-npm run commit
-
-# Commit format: type(scope): subject (max 100 chars)
-# Types: feat, fix, docs, style, refactor, perf, test, chore, ci, build, revert, security
-```
-
-### Examples
-- `feat(api): add WhatsApp message status endpoint`
-- `fix(baileys): resolve connection timeout issue`
-- `docs(readme): update installation instructions`
-- `refactor(service): extract common message validation logic`
-
-### Pull Request Requirements
-- **Clear description** of changes and motivation
-- **Linked issues** if applicable
-- **Migration impact** (specify database provider)
-- **Local testing steps** with screenshots/logs
-- **Breaking changes** clearly documented
-
-## Security & Configuration
-
-### Environment Setup
-```bash
-# Copy example environment file
-cp .env.example .env
-
-# NEVER commit secrets to version control
-# Set DATABASE_PROVIDER before database commands
-export DATABASE_PROVIDER=postgresql  # or mysql
-```
-
-### Security Best Practices
-- **API key authentication** via `apikey` header
-- **Input validation** with JSONSchema7
-- **Rate limiting** on all endpoints
-- **Webhook signature validation**
-- **Instance-based access control**
-- **Secure defaults** for all configurations
-
-### Vulnerability Reporting
-- See `SECURITY.md` for security vulnerability reporting process
-- Contact: `contato@evolution-api.com`
-
-## Communication Standards
-
-### Language Requirements
-- **User communication**: Always respond in Portuguese (PT-BR)
-- **Code/comments**: English for technical documentation
-- **API responses**: English for consistency
-- **Error messages**: Portuguese for user-facing errors
-
-### Documentation Standards
-- **Inline comments**: Document complex business logic
-- **API documentation**: Document all public endpoints
-- **Integration guides**: Document new integration patterns
-- **Migration guides**: Document database schema changes
-
-## Performance & Scalability
-
-### Caching Strategy
-- **Redis primary**: Distributed caching for production
-- **Node-cache fallback**: Local caching when Redis unavailable
-- **TTL strategy**: Appropriate cache expiration per data type
-- **Cache invalidation**: Proper invalidation on data changes
-
-### Connection Management
-- **Database**: Prisma connection pooling
-- **WhatsApp**: One connection per instance with lifecycle management
-- **Redis**: Connection pooling and retry logic
-- **External APIs**: Rate limiting and retry with exponential backoff
-
-### Monitoring & Observability
-- **Structured logging**: Pino logger with correlation IDs
-- **Error tracking**: Comprehensive error scenarios
-- **Health checks**: Instance status and connection monitoring
-- **Telemetry**: Usage analytics (non-sensitive data only)
-
+## URL Generation
+</laravel-boost-guidelines>

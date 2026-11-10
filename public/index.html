@@ -54,7 +54,7 @@
             <span class="nav-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></polygon></svg>
             </span>
-            <span>الانستنتات</span>
+            <span>أرقام الواتساب</span>
           </a>
 
           <a class="sidebar-nav-item" id="nav-messages" onclick="switchView('messages'); return false;">
@@ -62,6 +62,13 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             </span>
             <span>الرسائل</span>
+          </a>
+
+          <a class="sidebar-nav-item" id="nav-campaigns" onclick="switchView('campaigns'); return false;">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+            </span>
+            <span>الحملات الإعلانية</span>
           </a>
 
           <a class="sidebar-nav-item" id="nav-templates" onclick="switchView('templates'); return false;">
@@ -278,7 +285,7 @@
               </span>
               <span class="stat-main-number" id="kpi-instances-count">0</span>
             </div>
-            <div class="stat-box-label">عدد الانستنتات</div>
+            <div class="stat-box-label">أرقام الواتساب</div>
             <div class="stat-box-bottom">
               <div class="stat-status-pills">
                 <span class="mini-status-pill online">
@@ -304,10 +311,10 @@
                   <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                   <span>عرض الكل</span>
                 </a>
-                <span class="card-main-title">(WhatsApp Instances)</span>
+                <span class="card-main-title">أرقام الواتساب المتصلة</span>
                 <button class="btn-add-instance" onclick="openCreateInstanceModal()">
                   <svg style="width: 15px; height: 15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  <span>إضافة انستنس جديد</span>
+                  <span>إضافة رقم واتساب جديد</span>
                 </button>
               </div>
 
@@ -367,7 +374,7 @@
 
               <form onsubmit="handleQuickSend(event)">
                 <div class="form-group-custom">
-                  <label class="field-label">اختر الانستنس</label>
+                  <label class="field-label">اختر رقم الواتساب</label>
                   <div class="custom-select-trigger" onclick="cycleQuickSendInstance()">
                     <svg style="width: 14px; height: 14px; color: #9CA3AF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                     <div style="display: flex; align-items: center; gap: 8px;">
@@ -440,7 +447,7 @@
                   <div class="usage-stat-line">
                     <span class="usage-dot dark"></span>
                     <span class="usage-stat-val">4 / 10</span>
-                    <span class="usage-stat-desc">انستنتات نشطة</span>
+                    <span class="usage-stat-desc">أرقام واتساب نشطة</span>
                   </div>
                 </div>
 
@@ -476,14 +483,14 @@
       </div>
 
       <!-- =====================================================================
-           VIEW 2: الانستنتات (WhatsApp Instances Management)
+           VIEW 2: أرقام الواتساب (WhatsApp Numbers Management)
            ===================================================================== -->
       <div id="view-instances" class="spa-view">
         <div class="page-hero-bar">
           <div class="page-hero-actions">
             <button class="btn-primary-action" onclick="openCreateInstanceModal()">
               <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              <span>إضافة انستنس جديد</span>
+              <span>إضافة رقم واتساب جديد</span>
             </button>
             <button class="btn-secondary-action" onclick="fetchInstancesStats()">
               <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
@@ -492,7 +499,7 @@
           </div>
           <div class="page-hero-left">
             <h2 class="page-hero-title">
-              <span>إدارة الانستنتات (WhatsApp Instances)</span>
+              <span>إدارة أرقام الواتساب (WhatsApp Numbers)</span>
               <span class="pulse-dot green"></span>
             </h2>
             <p class="page-hero-desc">إدارة جلسات الواتساب، ومسح رمز الـ QR، وتتبع استهلاك كل رقم هاتف بشكل منفصل ومحمي.</p>
@@ -506,7 +513,7 @@
             <button class="filter-pill-btn" onclick="filterInstances('connected', this)">متصل</button>
             <button class="filter-pill-btn" onclick="filterInstances('disconnected', this)">غير متصل</button>
           </div>
-          <span style="font-size: 13px; color: #64746F; font-weight: 600;">الحد الأقصى للباقة: 5 انستنتات</span>
+          <span style="font-size: 13px; color: #64746F; font-weight: 600;">الحد الأقصى للباقة: 5 أرقام واتساب</span>
         </div>
 
         <!-- Instances Cards Grid -->
@@ -618,6 +625,518 @@
                 <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
               </button>
             </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           VIEW: الحملات الإعلانية (WhatsApp Campaigns & Anti-Ban Marketing)
+           ===================================================================== -->
+      <div id="view-campaigns" class="spa-view">
+        <!-- Page Hero Bar -->
+        <div class="page-hero-bar">
+          <div class="page-hero-actions">
+            <button class="btn-primary-action" id="btn-create-campaign-trigger" onclick="openCampaignWizard()">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>إنشاء حملة إعلانية جديدة</span>
+            </button>
+            <button class="btn-secondary-action" id="btn-back-to-campaigns" style="display: none;" onclick="showCampaignsList()">
+              <span>← العودة لقائمة الحملات</span>
+            </button>
+          </div>
+          <div class="page-hero-left">
+            <h2 class="page-hero-title">حملات الواتساب الإعلانية والتسويق الذكي</h2>
+            <p class="page-hero-desc">إرسال جماعي ذكي مع التوزيع التلقائي على أرقام متعددة (Round-Robin) وتقنيات Spintax ومكافحة الحظر المتطورة.</p>
+          </div>
+        </div>
+
+        <!-- 1. Top KPI Summary Stats -->
+        <div class="stats-overview-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 24px;">
+          <div class="stat-kpi-card">
+            <div class="kpi-icon-box" style="background: rgba(37, 211, 102, 0.1); color: var(--wox-green);">
+              <svg style="width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+            </div>
+            <div class="kpi-meta">
+              <span class="kpi-label">إجمالي الحملات</span>
+              <h3 class="kpi-value" id="kpi-total-campaigns">0</h3>
+            </div>
+          </div>
+
+          <div class="stat-kpi-card">
+            <div class="kpi-icon-box" style="background: rgba(59, 130, 246, 0.1); color: #2563eb;">
+              <svg style="width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </div>
+            <div class="kpi-meta">
+              <span class="kpi-label">إجمالي الرسائل المرسلة</span>
+              <h3 class="kpi-value" id="kpi-total-sent-messages">0</h3>
+            </div>
+          </div>
+
+          <div class="stat-kpi-card">
+            <div class="kpi-icon-box" style="background: rgba(16, 185, 129, 0.1); color: #059669;">
+              <svg style="width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="kpi-meta">
+              <span class="kpi-label">نسبة نجاح التسليم</span>
+              <h3 class="kpi-value" id="kpi-delivery-rate">100%</h3>
+            </div>
+          </div>
+
+          <div class="stat-kpi-card">
+            <div class="kpi-icon-box" style="background: rgba(245, 158, 11, 0.1); color: #d97706;">
+              <svg style="width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="kpi-meta">
+              <span class="kpi-label">أرقام التوزيع النشطة</span>
+              <h3 class="kpi-value" id="kpi-active-instances-count">1</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Campaigns List View (Default) -->
+        <div id="campaigns-list-view">
+          <div class="dashboard-card" style="padding: 24px; border-radius: var(--radius-md); background: #fff; box-shadow: var(--shadow-card);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-card); padding-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: var(--text-main);">سجل الحملات والجدولة</h3>
+              <div style="display: flex; gap: 8px;" id="campaigns-filter-chips">
+                <button class="filter-chip active" onclick="filterCampaigns('all')">الكل</button>
+                <button class="filter-chip" onclick="filterCampaigns('running')">جاري الإرسال</button>
+                <button class="filter-chip" onclick="filterCampaigns('scheduled')">مجدولة</button>
+                <button class="filter-chip" onclick="filterCampaigns('completed')">مكتملة</button>
+                <button class="filter-chip" onclick="filterCampaigns('paused')">متوقفة</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="saas-data-table" id="campaigns-table" style="width: 100%;">
+                <thead>
+                  <tr>
+                    <th>اسم الحملة</th>
+                    <th>الأرقام المشاركة (التوزيع)</th>
+                    <th>المستلمون / نسبة الإنجاز</th>
+                    <th>إعدادات مكافحة الحظر</th>
+                    <th>التاريخ / الجدولة</th>
+                    <th>الحالة</th>
+                    <th style="text-align: left;">الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="campaigns-tbody">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <div id="campaigns-empty-state" style="display: none; text-align: center; padding: 48px 20px;">
+              <div style="width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 50%; background: #F5F3EE; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                <svg style="width: 32px; height: 32px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+              </div>
+              <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">لا توجد حملات مسجلة حتى الآن</h4>
+              <p style="color: var(--text-muted); font-size: 13.5px; max-width: 420px; margin: 0 auto 20px;">ابدأ بإطلاق أول حملة رسائل جماعية ذكية مع ميزات التوزيع ومكافحة الحظر المتطورة.</p>
+              <button class="btn-primary-action" onclick="openCampaignWizard()">+ إنشاء حملة جديدة الآن</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Campaign Multi-Step Wizard View -->
+        <div id="campaign-wizard-view" style="display: none;">
+          <!-- Wizard Steps Progress Bar -->
+          <div style="background: #fff; padding: 18px 24px; border-radius: var(--radius-md); box-shadow: var(--shadow-card); margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; position: relative;">
+              <div class="wizard-step-node active" id="wizard-node-1" onclick="goToWizardStep(1)">
+                <span class="step-num">1</span>
+                <span class="step-title">الأرقام والتوزيع</span>
+              </div>
+              <div class="wizard-step-line" id="wizard-line-1"></div>
+              <div class="wizard-step-node" id="wizard-node-2" onclick="goToWizardStep(2)">
+                <span class="step-num">2</span>
+                <span class="step-title">الجمهور والمستهدفون</span>
+              </div>
+              <div class="wizard-step-line" id="wizard-line-2"></div>
+              <div class="wizard-step-node" id="wizard-node-3" onclick="goToWizardStep(3)">
+                <span class="step-num">3</span>
+                <span class="step-title">الرسالة و Spintax</span>
+              </div>
+              <div class="wizard-step-line" id="wizard-line-3"></div>
+              <div class="wizard-step-node" id="wizard-node-4" onclick="goToWizardStep(4)">
+                <span class="step-num">4</span>
+                <span class="step-title">درع مكافحة الحظر</span>
+              </div>
+              <div class="wizard-step-line" id="wizard-line-4"></div>
+              <div class="wizard-step-node" id="wizard-node-5" onclick="goToWizardStep(5)">
+                <span class="step-num">5</span>
+                <span class="step-title">الجدولة والإطلاق</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 1: Campaign Details & Instance Selection -->
+          <div class="wizard-content-step" id="wizard-step-1">
+            <div class="dashboard-card" style="padding: 28px; background: #fff; border-radius: var(--radius-md); box-shadow: var(--shadow-card);">
+              <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">الخطوة 1: تفاصيل الحملة واختيار أرقام الواتساب</h3>
+              <p style="color: var(--text-muted); font-size: 13.5px; margin-bottom: 24px;">حدد اسماً مميزاً للحملة واختر الأرقام التي ستشارك في إرسال الرسائل بالتناوب لتوزيع الحمل وتفادي الحظر.</p>
+
+              <div class="form-group" style="margin-bottom: 22px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px;">اسم الحملة الإعلانية *</label>
+                <input type="text" id="camp-input-name" class="saas-input" placeholder="مثال: عروض نهاية العام - خصم 30% للمشتركين" style="width: 100%; max-width: 550px; font-size: 14px; padding: 10px 14px;" required>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 22px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; max-width: 650px; margin-bottom: 10px;">
+                  <label style="font-weight: 600; font-size: 14px;">أرقام الواتساب المشاركة في الإرسال (Instances) *</label>
+                  <button type="button" class="btn-text-link" style="font-size: 12.5px; color: var(--wox-green-dark); background: none; border: none; cursor: pointer;" onclick="selectAllInstancesForCampaign()">تحديد كل الأرقام المتصلة</button>
+                </div>
+                <div id="camp-instances-selection-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; max-width: 780px;">
+                  <!-- Instances loaded here -->
+                </div>
+              </div>
+
+              <!-- Round-Robin Info Box -->
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-top: 20px; max-width: 780px; display: flex; gap: 14px; align-items: flex-start;">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </div>
+                <div style="font-size: 13px; color: #334155; line-height: 1.6;">
+                  <strong>ميزة التوزيع بالتناوب (Round-Robin Multi-Device):</strong>
+                  عند تحديد أكثر من رقم، سيقوم النظام تلقائياً بتوزيع كل رسالة على رقم مختلف بالترتيب (رقم 1 ثم رقم 2 ثم رقم 3). هذا يخفف الحمل عن الخطوط بنسبة تصل إلى 70% ويحمي حساباتك من الحظر نهائياً!
+                </div>
+              </div>
+
+              <div style="margin-top: 30px; display: flex; justify-content: flex-end;">
+                <button type="button" class="btn-primary-action" onclick="goToWizardStep(2)">المتابعة لاختيار الجمهور ←</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2: Target Audience & Dynamic Fields -->
+          <div class="wizard-content-step" id="wizard-step-2" style="display: none;">
+            <div class="dashboard-card" style="padding: 28px; background: #fff; border-radius: var(--radius-md); box-shadow: var(--shadow-card);">
+              <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">الخطوة 2: الجمهور والمستلمون (Target Audience)</h3>
+              <p style="color: var(--text-muted); font-size: 13.5px; margin-bottom: 24px;">اختر مصدر الأرقام المستهدفة مع إمكانية تمرير بيانات ديناميكية كاسم العميل والمتغيرات الإضافية.</p>
+
+              <!-- Import Source Switcher -->
+              <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                <button type="button" class="import-src-btn active" id="src-btn-contacts" onclick="setAudienceSource('contacts')">
+                  <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  <span>من جهات الاتصال المسجلة</span>
+                </button>
+                <button type="button" class="import-src-btn" id="src-btn-manual" onclick="setAudienceSource('manual')">
+                  <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  <span>لصق أرقام وقيم يدوياً</span>
+                </button>
+                <button type="button" class="import-src-btn" id="src-btn-csv" onclick="setAudienceSource('csv')">
+                  <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  <span>استيراد ملف CSV / Excel</span>
+                </button>
+              </div>
+
+              <!-- Source Content: Contacts Selector -->
+              <div id="audience-box-contacts" style="margin-bottom: 24px;">
+                <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 14px;">
+                  <label style="font-weight: 600; font-size: 13.5px;">تصفية حسب الوسم (Tag):</label>
+                  <select id="camp-contacts-tag-filter" class="saas-input" style="padding: 7px 14px; font-size: 13.5px;" onchange="filterContactsForCampaign()">
+                    <option value="all">جميع جهات الاتصال</option>
+                  </select>
+                  <span id="camp-selected-contacts-badge" style="font-size: 12.5px; background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 20px; font-weight: 600;">0 جهة اتصال محددة</span>
+                </div>
+              </div>
+
+              <!-- Source Content: Manual Paste Box -->
+              <div id="audience-box-manual" style="display: none; margin-bottom: 24px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 13.5px;">الصق الأرقام والبيانات (كل سطر يمثل عميل):</label>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">الصيغة: <code>رقم الهاتف, اسم العميل, متغير 1, متغير 2</code> (أو الرقم فقط)</p>
+                <textarea id="camp-manual-input" rows="6" class="saas-input" style="width: 100%; font-family: monospace; font-size: 13px; line-height: 1.6;" placeholder="966501234567, أحمد العتيبي, خصم 20%, كود WOX20&#10;966509876543, سارة محمود, خصم 15%, كود WOX15" oninput="parseManualAudience()"></textarea>
+              </div>
+
+              <!-- Source Content: CSV Upload Box -->
+              <div id="audience-box-csv" style="display: none; margin-bottom: 24px;">
+                <div style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 32px; text-align: center; background: #f8fafc; cursor: pointer;" onclick="document.getElementById('camp-csv-file-input').click()">
+                  <svg style="width: 38px; height: 38px; color: #64748b; margin-bottom: 10px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <p style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">اضغط هنا لرفع ملف CSV أو Excel</p>
+                  <p style="font-size: 12px; color: var(--text-muted);">الأعمدة المدعومة: phone, name, var1, var2</p>
+                  <input type="file" id="camp-csv-file-input" accept=".csv,.txt" style="display: none;" onchange="handleCSVUpload(event)">
+                </div>
+              </div>
+
+              <!-- Live Audience Preview Table -->
+              <div style="border-top: 1px solid var(--border-card); padding-top: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <h4 style="font-size: 14.5px; font-weight: 700;">معاينة قائمة المستلمين (<span id="camp-recipients-count">0</span> رقم معتمد)</h4>
+                  <button type="button" class="btn-text-link" style="font-size: 12px; color: #ef4444; background: none; border: none; cursor: pointer;" onclick="clearRecipientsList()">مسح القائمة</button>
+                </div>
+                <div style="max-height: 220px; overflow-y: auto; border: 1px solid var(--border-card); border-radius: 8px;">
+                  <table class="saas-data-table" style="width: 100%; font-size: 12.5px;">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>رقم الهاتف</th>
+                        <th>الاسم ({name})</th>
+                        <th>متغير 1 ({var1})</th>
+                        <th>متغير 2 ({var2})</th>
+                      </tr>
+                    </thead>
+                    <tbody id="camp-recipients-preview-tbody">
+                      <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">لا يوجد مستلمون حتى الآن</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                <button type="button" class="btn-secondary-action" onclick="goToWizardStep(1)">← السابق</button>
+                <button type="button" class="btn-primary-action" onclick="goToWizardStep(3)">المتابعة لصياغة الرسالة ←</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3: Dynamic Template & Spintax Builder + Live Phone Mockup -->
+          <div class="wizard-content-step" id="wizard-step-3" style="display: none;">
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px;">
+              <!-- Left Column: Message Editor -->
+              <div class="dashboard-card" style="padding: 28px; background: #fff; border-radius: var(--radius-md); box-shadow: var(--shadow-card);">
+                <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 6px;">الخطوة 3: صياغة الرسالة وقوالب Spintax الذكية</h3>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 18px;">استخدم المتغيرات لتخصيص كل رسالة باسم العميل، واستخدم Spintax لتغيير صياغة الكلمات تلقائياً لمنع خوارزميات الحظر من كشف التكرار.</p>
+
+                <!-- Variable Quick Tags Toolbar -->
+                <div style="margin-bottom: 12px;">
+                  <label style="display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: var(--text-muted);">إدراج متغير ديناميكي سريع:</label>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="tag-insert-btn" onclick="insertTagIntoTemplate('{name}')">+ {name} اسم العميل</button>
+                    <button type="button" class="tag-insert-btn" onclick="insertTagIntoTemplate('{phone}')">+ {phone} رقم الجوال</button>
+                    <button type="button" class="tag-insert-btn" onclick="insertTagIntoTemplate('{var1}')">+ {var1} متغير 1</button>
+                    <button type="button" class="tag-insert-btn" onclick="insertTagIntoTemplate('{var2}')">+ {var2} متغير 2</button>
+                    <button type="button" class="tag-insert-btn spintax" onclick="insertTagIntoTemplate('{مرحباً|أهلاً بك|السلام عليكم}')">🎲 إضافة Spintax ترحيب</button>
+                    <button type="button" class="tag-insert-btn spintax" onclick="insertTagIntoTemplate('{يسرنا|يسعدنا|يطيب لنا}')">🎲 Spintax عبارات</button>
+                  </div>
+                </div>
+
+                <!-- Template Textarea -->
+                <div class="form-group" style="margin-bottom: 18px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <label style="font-weight: 600; font-size: 13.5px;">نص الرسالة *</label>
+                    <button type="button" class="btn-text-link" style="font-size: 12px; color: var(--wox-green-dark); background: none; border: none; cursor: pointer;" onclick="testSpintaxVariation()">🔄 تجربة تنويع Spintax عشوائياً</button>
+                  </div>
+                  <textarea id="camp-input-template" rows="8" class="saas-input" style="width: 100%; font-size: 14px; line-height: 1.6; padding: 12px;" placeholder="{مرحباً|أهلاً بك|السلام عليكم} يا {name} 👋&#10;&#10;{يسعدنا|يسرنا} إبلاغك بأن {var1}&#10;كود الخصم الحصري الخاص بك: *{var2}*&#10;&#10;للطلب تفضل بزيارة موقعنا: https://mystore.com" oninput="updateLivePhonePreview()"></textarea>
+                </div>
+
+                <!-- Media Attachment Option -->
+                <div class="form-group" style="margin-bottom: 18px;">
+                  <label style="font-weight: 600; font-size: 13px; margin-bottom: 6px; display: block;">إرفاق صورة أو فيديو أو مستند (اختياري)</label>
+                  <div style="display: flex; gap: 10px;">
+                    <select id="camp-input-media-type" class="saas-input" style="width: 110px; font-size: 13px;" onchange="updateLivePhonePreview()">
+                      <option value="image">صورة (Image)</option>
+                      <option value="video">فيديو (Video)</option>
+                      <option value="document">ملف (PDF/Doc)</option>
+                    </select>
+                    <input type="url" id="camp-input-media-url" class="saas-input" placeholder="رابط الملف المباشر مثلاً: https://mysite.com/banner.jpg" style="flex: 1; font-size: 13px;" oninput="updateLivePhonePreview()">
+                  </div>
+                </div>
+
+                <div style="margin-top: 24px; display: flex; justify-content: space-between;">
+                  <button type="button" class="btn-secondary-action" onclick="goToWizardStep(2)">← السابق</button>
+                  <button type="button" class="btn-primary-action" onclick="goToWizardStep(4)">المتابعة لدرع الحماية ←</button>
+                </div>
+              </div>
+
+              <!-- Right Column: Live Mobile WhatsApp Mockup -->
+              <div class="dashboard-card" style="padding: 24px; background: #fff; border-radius: var(--radius-md); box-shadow: var(--shadow-card); display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                  <h4 style="font-size: 14px; font-weight: 700; color: var(--text-main);">المعاينة الحية على جوال العميل</h4>
+                  <span style="font-size: 11.5px; background: var(--wox-green-badge); color: var(--wox-green-dark); padding: 2px 8px; border-radius: 12px; font-weight: 600;">Live Preview</span>
+                </div>
+
+                <!-- Phone Frame Mockup -->
+                <div class="whatsapp-phone-mockup">
+                  <!-- Phone Top Header -->
+                  <div class="phone-mockup-header">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="font-size: 12px;">←</span>
+                      <div class="phone-mockup-avatar">W</div>
+                      <div>
+                        <div style="font-size: 12.5px; font-weight: 700; color: #fff;" id="mockup-header-title">متجر الواتساب</div>
+                        <div style="font-size: 9.5px; color: #dcfce7;">متصل الآن</div>
+                      </div>
+                    </div>
+                    <div style="color: #fff; font-size: 14px;">⋮</div>
+                  </div>
+
+                  <!-- Chat Body Container -->
+                  <div class="phone-mockup-body" id="mockup-chat-body">
+                    <!-- WhatsApp Chat Bubble -->
+                    <div class="whatsapp-chat-bubble" id="mockup-chat-bubble">
+                      <div id="mockup-media-container" style="display: none; margin-bottom: 8px; border-radius: 6px; overflow: hidden;">
+                        <img id="mockup-media-img" src="" alt="Media" style="width: 100%; max-height: 140px; object-fit: cover;">
+                      </div>
+                      <div id="mockup-rendered-text" style="white-space: pre-wrap; font-size: 12.5px; line-height: 1.5; color: #111827;">
+                        مرحباً بك يا محمد أحمد 👋
+                      </div>
+                      <div style="display: flex; justify-content: flex-end; align-items: center; gap: 3px; margin-top: 4px;">
+                        <span style="font-size: 9.5px; color: #6b7280;" id="mockup-timestamp">12:30 م</span>
+                        <span style="color: #3b82f6; font-size: 11px;">✓✓</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 14px; text-align: center;">يتم استبدال المتغيرات وتوليد الصياغة العشوائية لكل مستلم على حدة.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 4: Anti-Ban Shield & Security Parameters -->
+          <div class="wizard-content-step" id="wizard-step-4" style="display: none;">
+            <div class="dashboard-card" style="padding: 28px; background: #fff; border-radius: var(--radius-md); box-shadow: var(--shadow-card);">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(37, 211, 102, 0.15); color: var(--wox-green-dark); display: flex; align-items: center; justify-content: center;">
+                  <svg style="width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3 style="font-size: 18px; font-weight: 700; margin: 0;">الخطوة 4: درع مكافحة الحظر وحماية أرقام الواتساب</h3>
+              </div>
+              <p style="color: var(--text-muted); font-size: 13.5px; margin-bottom: 24px;">خوارزمية ذكية تحاكي السلوك البشري الطبيعي، وتمنع كشف نظام الرسائل الآلية لدى واتساب وتضمن بقاء أرقامك آمنة.</p>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 850px;">
+                <!-- Anti-Ban Feature 1: Random Delay -->
+                <div class="antiban-feature-card">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <label style="font-weight: 700; font-size: 14px;">⏱️ التأخير العشوائي المتقلب (Random Delay)</label>
+                    <span style="font-size: 11px; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 10px; font-weight: 600;">موصى به جداً</span>
+                  </div>
+                  <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px;">بدلاً من الإرسال بفارق زمني ثابت، يتم توليد رقم عشوائي بين الحد الأدنى والأقصى لكل رسالة لمحاكاة سرعة الكتابة البشرية.</p>
+                  <div style="display: flex; gap: 12px; align-items: center;">
+                    <div style="flex: 1;">
+                      <span style="font-size: 11.5px; color: var(--text-muted); display: block; margin-bottom: 4px;">الحد الأدنى (ثواني)</span>
+                      <input type="number" id="camp-antiban-min-delay" class="saas-input" value="15" min="5" max="120" style="width: 100%; padding: 8px;">
+                    </div>
+                    <span style="font-weight: bold; color: var(--text-muted);">إلى</span>
+                    <div style="flex: 1;">
+                      <span style="font-size: 11.5px; color: var(--text-muted); display: block; margin-bottom: 4px;">الحد الأقصى (ثواني)</span>
+                      <input type="number" id="camp-antiban-max-delay" class="saas-input" value="35" min="10" max="300" style="width: 100%; padding: 8px;">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Anti-Ban Feature 2: Batch Cooldown -->
+                <div class="antiban-feature-card">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <label style="font-weight: 700; font-size: 14px;">☕ فترات الراحة والتوقف المؤقت (Batch Cooldown)</label>
+                    <span style="font-size: 11px; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 10px; font-weight: 600;">حماية إضافية</span>
+                  </div>
+                  <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px;">إيقاف الإرسال مؤقتاً بعد إرسال دفعة محددة من الرسائل لمنح الرقم فترة استراحة طبيعية قبل مواصلة الإرسال.</p>
+                  <div style="display: flex; gap: 12px; align-items: center;">
+                    <div style="flex: 1;">
+                      <span style="font-size: 11.5px; color: var(--text-muted); display: block; margin-bottom: 4px;">إرسال كل دفعة (رسائل)</span>
+                      <input type="number" id="camp-antiban-batch-size" class="saas-input" value="20" min="5" max="100" style="width: 100%; padding: 8px;">
+                    </div>
+                    <div style="flex: 1;">
+                      <span style="font-size: 11.5px; color: var(--text-muted); display: block; margin-bottom: 4px;">التوقف راحة لمدة (دقائق)</span>
+                      <input type="number" id="camp-antiban-cooldown" class="saas-input" value="3" min="1" max="60" style="width: 100%; padding: 8px;">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Anti-Ban Feature 3: Typing Simulation -->
+                <div class="antiban-feature-card">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <label style="font-weight: 700; font-size: 14px;">✍️ محاكاة الكتابة (Typing Simulation)</label>
+                    <input type="checkbox" id="camp-antiban-typing" checked style="width: 18px; height: 18px; accent-color: var(--wox-green);">
+                  </div>
+                  <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5;">يقوم السيرفر بإرسال إشارة "جاري الكتابة... (composing)" للطرف الآخر لمدة ثوانٍ قبل تسليم الرسالة، ليظهر الإرسال كأنه محادثة حقيقية من إنسان.</p>
+                </div>
+
+                <!-- Anti-Ban Feature 4: Rotation Toggle -->
+                <div class="antiban-feature-card">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <label style="font-weight: 700; font-size: 14px;">🔄 التوزيع الدوري (Round-Robin Switch)</label>
+                    <input type="checkbox" id="camp-antiban-rotation" checked style="width: 18px; height: 18px; accent-color: var(--wox-green);">
+                  </div>
+                  <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5;">التبديل التلقائي بين جميع الأرقام المحددة في الخطوة الأولى بالتتابع، بحيث لا يرسل أي رقم رسالتين متتاليتين لنفس الدفعة.</p>
+                </div>
+              </div>
+
+              <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                <button type="button" class="btn-secondary-action" onclick="goToWizardStep(3)">← السابق</button>
+                <button type="button" class="btn-primary-action" onclick="goToWizardStep(5)">المتابعة للتجربة والإطلاق ←</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 5: Scheduling, Test Send & Launch -->
+          <div class="wizard-content-step" id="wizard-step-5" style="display: none;">
+            <div class="dashboard-card" style="padding: 28px; background: #fff; border-radius: var(--radius-md); box-shadow: var(--shadow-card);">
+              <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">الخطوة 5: الجدولة والتجربة والإطلاق النهائي</h3>
+              <p style="color: var(--text-muted); font-size: 13.5px; margin-bottom: 24px;">راجع ملخص الحملة وجرب استلامها على رقمك الشخصي أولاً، ثم أطلق الحملة فوراً أو حدد وقتاً مستقبلياً لبدئها.</p>
+
+              <!-- Campaign Summary Card -->
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 22px; margin-bottom: 24px; max-width: 850px;">
+                <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 14px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">📋 ملخص خطة إطلاق الحملة</h4>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 14px;">
+                  <div>
+                    <span style="font-size: 12px; color: var(--text-muted); display: block;">اسم الحملة:</span>
+                    <strong style="font-size: 14px;" id="summary-camp-name">-</strong>
+                  </div>
+                  <div>
+                    <span style="font-size: 12px; color: var(--text-muted); display: block;">إجمالي المستلمين:</span>
+                    <strong style="font-size: 14px; color: var(--wox-green-dark);" id="summary-recipients-count">0 مستلم</strong>
+                  </div>
+                  <div>
+                    <span style="font-size: 12px; color: var(--text-muted); display: block;">أرقام الواتساب المشاركة:</span>
+                    <strong style="font-size: 14px;" id="summary-instances-count">0 أرقام</strong>
+                  </div>
+                  <div>
+                    <span style="font-size: 12px; color: var(--text-muted); display: block;">متوسط التأخير لكل رسالة:</span>
+                    <strong style="font-size: 14px;" id="summary-avg-delay">25 ثانية</strong>
+                  </div>
+                  <div>
+                    <span style="font-size: 12px; color: var(--text-muted); display: block;">فترات التوقف المؤقت:</span>
+                    <strong style="font-size: 14px;" id="summary-cooldown">كل 20 رسالة / 3 دقائق</strong>
+                  </div>
+                  <div>
+                    <span style="font-size: 12px; color: var(--text-muted); display: block;">الوقت المتوقع للاكتمال:</span>
+                    <strong style="font-size: 14px; color: #d97706;" id="summary-estimated-time">~ 15 دقيقة</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Test Message on My Phone -->
+              <div style="background: #fff; border: 2px solid #bbf7d0; border-radius: 12px; padding: 20px; margin-bottom: 24px; max-width: 850px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                  <div>
+                    <h4 style="font-size: 15px; font-weight: 700; color: #166534; margin: 0;">📱 تجربة إرسال رسالة معاينة على رقمك الآن</h4>
+                    <p style="font-size: 12.5px; color: #15803d; margin: 4px 0 0;">تأكد من شكل الرسالة وطريقة استبدال المتغيرات و Spintax قبل وصولها للجمهور.</p>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 12px; align-items: center; margin-top: 10px;">
+                  <input type="text" id="camp-test-phone" class="saas-input" placeholder="رقم هاتفك مع مفتاح الدولة (مثال: 966501234567)" style="flex: 1; font-size: 13.5px; padding: 10px 14px;">
+                  <button type="button" class="btn-primary-action" style="background: #16a34a; white-space: nowrap;" onclick="sendCampaignTestSample()">⚡ إرسال تجربة الآن</button>
+                </div>
+                <div id="camp-test-result-box" style="display: none; margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 12.5px;"></div>
+              </div>
+
+              <!-- Launch Mode Selector -->
+              <div style="margin-bottom: 24px; max-width: 850px;">
+                <label style="font-weight: 700; font-size: 14px; display: block; margin-bottom: 10px;">موعد الإطلاق والتنفيذ:</label>
+                <div style="display: flex; gap: 20px;">
+                  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px;">
+                    <input type="radio" name="camp_launch_type" value="instant" checked onchange="toggleScheduleInput(false)">
+                    <strong>إطلاق فوري الآن (Instant)</strong>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px;">
+                    <input type="radio" name="camp_launch_type" value="scheduled" onchange="toggleScheduleInput(true)">
+                    <strong>جدولة في تاريخ ووقت محدد (Schedule)</strong>
+                  </label>
+                </div>
+                <div id="camp-schedule-datetime-container" style="display: none; margin-top: 14px;">
+                  <input type="datetime-local" id="camp-schedule-datetime" class="saas-input" style="padding: 9px 14px; font-size: 13.5px;">
+                </div>
+              </div>
+
+              <div style="margin-top: 30px; display: flex; justify-content: space-between; max-width: 850px;">
+                <button type="button" class="btn-secondary-action" onclick="goToWizardStep(4)">← السابق</button>
+                <div style="display: flex; gap: 12px;">
+                  <button type="button" class="btn-secondary-action" onclick="saveCampaignAsDraft()">حفظ كمسودة 💾</button>
+                  <button type="button" class="btn-primary-action" style="background: var(--wox-green); font-size: 15px; padding: 10px 28px;" onclick="executeLaunchCampaign()">🚀 إطلاق الحملة الآن</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -895,7 +1414,7 @@
               <tr>
                 <th>التفاصيل</th>
                 <th>كود الاستجابة</th>
-                <th>الانستنس</th>
+                <th>رقم الواتساب</th>
                 <th>الحدث</th>
                 <th>التوقيت</th>
               </tr>
@@ -1081,12 +1600,12 @@
   <div id="create-instance-modal" class="modal-overlay">
     <div class="modal-card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-        <h3 style="font-size: 18px; font-weight: 800; color: #171E1B;">إضافة انستنس واتساب جديد</h3>
+        <h3 style="font-size: 18px; font-weight: 800; color: #171E1B;">إضافة رقم واتساب جديد</h3>
         <button onclick="closeModal('create-instance-modal')" style="border: none; background: transparent; font-size: 20px; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <form onsubmit="handleCreateInstanceSubmit(event)">
         <div class="form-group-custom">
-          <label class="field-label">اسم الانستنس التعريفي</label>
+          <label class="field-label">معرّف رقم الواتساب</label>
           <input type="text" id="new-inst-name" class="phone-raw-input" style="border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 8px 12px; background: #FAF9F5; direction: ltr;" placeholder="مثال: jeddah_branch" required>
         </div>
         <div class="form-group-custom">
@@ -1193,7 +1712,7 @@
         <div style="border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 14px; text-align: center; background: #FAF9F5;">
           <h4 style="font-size: 14px; font-weight: 800;">البداية</h4>
           <div style="font-size: 18px; font-weight: 900; color: #171E1B; margin: 8px 0; font-family: 'Inter';">99 ر.س</div>
-          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">1 انستنس<br>5,000 رسالة</p>
+          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">1 رقم واتساب<br>5,000 رسالة</p>
           <button class="btn-secondary-action" style="width: 100%; margin-top: 10px; font-size: 11.5px;" onclick="selectPlan('Starter')">اختيار</button>
         </div>
 
@@ -1202,7 +1721,7 @@
           <span style="position: absolute; top: -10px; right: 50%; transform: translateX(50%); background: var(--wox-green); color: white; font-size: 9.5px; font-weight: 800; padding: 2px 8px; border-radius: var(--radius-pill);">الحالية</span>
           <h4 style="font-size: 14px; font-weight: 800;">النمو (Growth)</h4>
           <div style="font-size: 18px; font-weight: 900; color: #171E1B; margin: 8px 0; font-family: 'Inter';">249 ر.س</div>
-          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">10 انستنتات<br>100,000 رسالة</p>
+          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">10 أرقام واتساب<br>100,000 رسالة</p>
           <button class="btn-primary-action" style="width: 100%; margin-top: 10px; font-size: 11.5px; justify-content: center;" disabled>مفعلة</button>
         </div>
 
@@ -1210,7 +1729,7 @@
         <div style="border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 14px; text-align: center; background: #FAF9F5;">
           <h4 style="font-size: 14px; font-weight: 800;">المؤسسات</h4>
           <div style="font-size: 18px; font-weight: 900; color: #171E1B; margin: 8px 0; font-family: 'Inter';">599 ر.س</div>
-          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">انستنتات غير محدودة<br>رسائل غير محدودة</p>
+          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">أرقام واتساب غير محدودة<br>رسائل غير محدودة</p>
           <button class="btn-secondary-action" style="width: 100%; margin-top: 10px; font-size: 11.5px;" onclick="selectPlan('Enterprise')">ترقية</button>
         </div>
       </div>
@@ -1307,6 +1826,6 @@
 
   <!-- JavaScript Controller (Cache Buster) -->
   <script src="/js/wox-branding.js"></script>
-  <script src="/js/wox-saas.js?v=2.5"></script>
+  <script src="/js/wox-saas.js?v=3.0"></script>
 </body>
 </html>

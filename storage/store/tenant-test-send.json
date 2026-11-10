@@ -1,0 +1,128 @@
+{
+    "campaigns": [
+        {
+            "id": "camp_Rf5JzmyUIn",
+            "name": "حملة جديدة",
+            "instances": [],
+            "template": "{مرحباً|أهلاً} بك يا {name} في {var1}",
+            "media_url": null,
+            "media_type": "image",
+            "recipients": [],
+            "total_contacts": 0,
+            "status": "draft",
+            "anti_ban": {
+                "min_delay": 15,
+                "max_delay": 35,
+                "batch_size": 20,
+                "cooldown_minutes": 3,
+                "simulate_typing": true,
+                "rotate_instances": true
+            },
+            "schedule": {
+                "type": "instant",
+                "scheduled_at": null
+            },
+            "progress": {
+                "sent": 0,
+                "delivered": 0,
+                "failed": 0,
+                "current_index": 0
+            },
+            "created_at": "2026-11-09T16:59:22+00:00",
+            "updated_at": "2026-11-09T16:59:22+00:00"
+        },
+        {
+            "id": "camp_V77c3rDK0a",
+            "name": "حملة جديدة",
+            "instances": [],
+            "template": "{مرحباً|أهلاً} بك يا {name} في {var1}",
+            "media_url": null,
+            "media_type": "image",
+            "recipients": [],
+            "total_contacts": 0,
+            "status": "draft",
+            "anti_ban": {
+                "min_delay": 15,
+                "max_delay": 35,
+                "batch_size": 20,
+                "cooldown_minutes": 3,
+                "simulate_typing": true,
+                "rotate_instances": true
+            },
+            "schedule": {
+                "type": "instant",
+                "scheduled_at": null
+            },
+            "progress": {
+                "sent": 0,
+                "delivered": 0,
+                "failed": 0,
+                "current_index": 0
+            },
+            "created_at": "2026-11-09T17:00:10+00:00",
+            "updated_at": "2026-11-09T17:00:10+00:00"
+        },
+        {
+            "id": "camp_BkNVpAY8md",
+            "name": "حملة جديدة",
+            "instances": [],
+            "template": "{مرحباً|أهلاً} بك يا {name} في {var1}",
+            "media_url": null,
+            "media_type": "image",
+            "recipients": [],
+            "total_contacts": 0,
+            "status": "draft",
+            "anti_ban": {
+                "min_delay": 15,
+                "max_delay": 35,
+                "batch_size": 20,
+                "cooldown_minutes": 3,
+                "simulate_typing": true,
+                "rotate_instances": true
+            },
+            "schedule": {
+                "type": "instant",
+                "scheduled_at": null
+            },
+            "progress": {
+                "sent": 0,
+                "delivered": 0,
+                "failed": 0,
+                "current_index": 0
+            },
+            "created_at": "2026-11-09T17:01:31+00:00",
+            "updated_at": "2026-11-09T17:01:31+00:00"
+        },
+        {
+            "id": "camp_1M9wu5rBHy",
+            "name": "حملة جديدة",
+            "instances": [],
+            "template": "{مرحباً|أهلاً} بك يا {name} في {var1}",
+            "media_url": null,
+            "media_type": "image",
+            "recipients": [],
+            "total_contacts": 0,
+            "status": "draft",
+            "anti_ban": {
+                "min_delay": 15,
+                "max_delay": 35,
+                "batch_size": 20,
+                "cooldown_minutes": 3,
+                "simulate_typing": true,
+                "rotate_instances": true
+            },
+            "schedule": {
+                "type": "instant",
+                "scheduled_at": null
+            },
+            "progress": {
+                "sent": 0,
+                "delivered": 0,
+                "failed": 0,
+                "current_index": 0
+            },
+            "created_at": "2026-11-09T17:01:52+00:00",
+            "updated_at": "2026-11-09T17:01:52+00:00"
+        }
+    ]
+}

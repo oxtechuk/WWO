@@ -2700,3 +2700,251 @@ body {
 .custom-tag-field:focus {
   border-color: #C59B6D;
 }
+
+/* ==========================================================================
+   WhatsApp Campaign Manager & Multi-Step Anti-Ban Wizard Styles
+   ========================================================================== */
+
+/* Wizard Progress Bar */
+.wizard-step-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.wizard-step-node.active {
+  opacity: 1;
+}
+
+.wizard-step-node .step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13.5px;
+  transition: all 0.2s ease;
+}
+
+.wizard-step-node.active .step-num {
+  background: var(--wox-dark-btn);
+  color: #FFFFFF;
+}
+
+.wizard-step-node.completed .step-num {
+  background: var(--wox-green);
+  color: #FFFFFF;
+}
+
+.wizard-step-node .step-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.wizard-step-line {
+  flex: 1;
+  height: 2px;
+  background: #e2e8f0;
+  margin: 0 12px;
+  transition: all 0.2s ease;
+}
+
+.wizard-step-line.active {
+  background: var(--wox-green);
+}
+
+/* Source Switcher Buttons */
+.import-src-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border-card);
+  background: #fff;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.import-src-btn:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.import-src-btn.active {
+  border-color: var(--wox-dark-btn);
+  background: var(--wox-dark-btn);
+  color: #fff;
+}
+
+/* Tag Insert Buttons */
+.tag-insert-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.tag-insert-btn:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+.tag-insert-btn.spintax {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.tag-insert-btn.spintax:hover {
+  background: #fde68a;
+}
+
+/* Anti-Ban Feature Card */
+.antiban-feature-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s ease;
+}
+
+.antiban-feature-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+/* WhatsApp Phone Mockup */
+.whatsapp-phone-mockup {
+  width: 290px;
+  height: 480px;
+  border-radius: 36px;
+  background: #efeae2;
+  border: 8px solid #1f2937;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  background-image: radial-gradient(#d1d5db 0.8px, transparent 0.8px);
+  background-size: 16px 16px;
+}
+
+.phone-mockup-header {
+  background: #075e54;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  border-top-left-radius: 26px;
+  border-top-right-left: 26px;
+}
+
+.phone-mockup-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.phone-mockup-body {
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.whatsapp-chat-bubble {
+  background: #ffffff;
+  border-radius: 10px 10px 2px 10px;
+  padding: 10px 12px;
+  max-width: 88%;
+  align-self: flex-start;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  position: relative;
+  animation: bubblePop 0.25s ease-out;
+}
+
+@keyframes bubblePop {
+  0% { transform: scale(0.92); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Instance Select Card */
+.instance-select-card {
+  border: 2px solid var(--border-card);
+  border-radius: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.instance-select-card:hover {
+  border-color: #cbd5e1;
+}
+
+.instance-select-card.selected {
+  border-color: var(--wox-green);
+  background: #f0fdf4;
+}
+
+/* Filter Chips */
+.filter-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-card);
+  background: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.filter-chip:hover {
+  border-color: #cbd5e1;
+  color: var(--text-main);
+}
+
+.filter-chip.active {
+  background: var(--wox-dark-btn);
+  border-color: var(--wox-dark-btn);
+  color: #fff;
+}

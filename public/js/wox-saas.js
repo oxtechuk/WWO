@@ -3,9 +3,12 @@
  * Developed by Ox Tech | Fully Wired to Evolution API & MySQL
  */
 
-const API_BASE = window.location.origin;
-const MASTER_API_KEY = '429683C4C977415CAAFCCE10F7D57E11';
-let currentApiKey = MASTER_API_KEY;
+// Global API configuration (supports multiple reloads without SyntaxError)
+var API_BASE = window.API_BASE || window.location.origin;
+window.API_BASE = API_BASE;
+var MASTER_API_KEY = window.MASTER_API_KEY || '429683C4C977415CAAFCCE10F7D57E11';
+window.MASTER_API_KEY = MASTER_API_KEY;
+var currentApiKey = MASTER_API_KEY;
 let currentActiveView = 'dashboard';
 let activeDevLanguage = 'curl';
 let currentInstIdx = 0;
@@ -207,7 +210,8 @@ function switchView(viewId, updateHistory = true) {
   const searchInput = document.getElementById('global-search-input');
   if (searchInput) {
     switch (viewId) {
-      case 'instances': searchInput.placeholder = 'ابحث في أرقام واسماء الانستنتات...'; break;
+      case 'instances': searchInput.placeholder = 'ابحث في أرقام الواتساب وأسمائها...'; break;
+      case 'campaigns': searchInput.placeholder = 'ابحث في أسماء وحالات الحملات الإعلانية...'; break;
       case 'messages': searchInput.placeholder = 'ابحث في أسماء المحادثات والرسائل...'; break;
       case 'templates': searchInput.placeholder = 'ابحث في أسماء وأكواد القوالب...'; break;
       case 'contacts': searchInput.placeholder = 'ابحث في جهات الاتصال والأرقام والتصنيفات...'; break;
@@ -217,7 +221,9 @@ function switchView(viewId, updateHistory = true) {
   }
 
   // Auto-refresh view-specific dynamic data
-  if (viewId === 'messages') {
+  if (viewId === 'campaigns') {
+    loadCampaigns();
+  } else if (viewId === 'messages') {
     fetchRealChats();
   } else if (viewId === 'contacts') {
     fetchRealContacts();
@@ -231,7 +237,8 @@ function switchView(viewId, updateHistory = true) {
 function getArabicViewTitle(id) {
   const titles = {
     dashboard: 'الرئيسية',
-    instances: 'الانستنتات',
+    instances: 'أرقام الواتساب',
+    campaigns: 'الحملات الإعلانية',
     messages: 'الرسائل والمحادثات',
     templates: 'قوالب الرسائل',
     contacts: 'جهات الاتصال',
@@ -288,7 +295,7 @@ function renderDashboardData() {
               <div style="font-size: 15px; font-weight: 700; color: #1C1613;">لا توجد أرقام واتساب مربوطة بحسابك حالياً</div>
               <div style="font-size: 13px; color: #8C847D;">ابدأ الآن بربط أول رقم واتساب لمتجرك عبر مسح كود QR</div>
               <button class="btn-primary btn-gold" style="margin-top: 6px; font-size: 12px; padding: 8px 18px;" onclick="openCreateInstanceModal()">
-                إضافة انستنس جديد الآن
+                إضافة رقم واتساب جديد الآن
               </button>
             </div>
           </td>
@@ -422,10 +429,10 @@ function renderInstancesView() {
         <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(197, 155, 109, 0.15); margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; color: #C59B6D;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
         </div>
-        <div style="font-size: 16px; font-weight: 800; color: #171E1B; margin-bottom: 6px;">لا توجد انستنتات مضافة بعد</div>
+        <div style="font-size: 16px; font-weight: 800; color: #171E1B; margin-bottom: 6px;">لا توجد أرقام واتساب مضافة بعد</div>
         <div style="font-size: 13px; color: #6B7280; max-width: 400px; margin: 0 auto 18px; line-height: 1.6;">قم بإضافة رقم واتساب متجرك الأول لتتمكن من إرسال واستقبال الرسائل وتفعيل الشات بوت.</div>
         <button class="btn-primary-action" style="padding: 10px 24px; font-size: 13px; margin: 0 auto; display: inline-flex;" onclick="openCreateInstanceModal()">
-          إضافة انستنس جديد الآن
+          إضافة رقم واتساب جديد
         </button>
       </div>
     `;
@@ -1365,7 +1372,7 @@ function cycleQuickSendInstance() {
   const inst = woxState.instances[currentInstIdx];
   const label = document.getElementById('quick-selected-inst-label');
   if (label) label.textContent = `${inst.name} (${inst.phone})`;
-  showToast(`تم اختيار الانستنس: ${inst.name}`);
+  showToast(`تم اختيار رقم الواتساب: ${inst.name}`);
 }
 
 // Instance Creation & QR Code Polling
@@ -1406,30 +1413,37 @@ async function showQrModalFor(id, displayName, desc = 'فرع تجاري جدي�
 
   try {
     try {
-      await fetch(`${API_BASE}/instance/create`, {
+      const createRes = await fetch(`${API_BASE}/instance/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': MASTER_API_KEY },
         body: JSON.stringify({ instanceName: id, integration: 'WHATSAPP-BAILEYS', qrcode: true })
       });
-    } catch (e) {}
+      if (!createRes.ok && createRes.status !== 403 && createRes.status !== 409) {
+        console.warn('Instance create notice:', createRes.status);
+      }
+    } catch (e) {
+      console.warn('Instance create caught:', e);
+    }
 
     let loaded = false;
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 4; i++) {
       try {
         const connRes = await fetch(`${API_BASE}/instance/connect/${id}`, {
           headers: { 'apikey': MASTER_API_KEY }
         });
-        const data = await connRes.json();
-        const base64 = data.base64 || data.qrcode?.base64;
-        if (base64) {
-          qrImg.src = base64;
-          qrImg.style.display = 'block';
-          qrStatus.innerHTML = `امسح الرمز ضوئياً من تطبيق واتساب (الأجهزة المرتبطة) لربط [<strong>${actualName}</strong>]`;
-          loaded = true;
-          break;
+        if (connRes.ok) {
+          const data = await connRes.json();
+          const base64 = data.base64 || data.qrcode?.base64;
+          if (base64) {
+            qrImg.src = base64;
+            qrImg.style.display = 'block';
+            qrStatus.innerHTML = `امسح الرمز ضوئياً من تطبيق واتساب (الأجهزة المرتبطة) لربط [<strong>${actualName}</strong>]`;
+            loaded = true;
+            break;
+          }
         }
       } catch (e) {}
-      await new Promise(r => setTimeout(r, 1200));
+      await new Promise(r => setTimeout(r, 600));
     }
 
     if (!loaded) {
@@ -1452,11 +1466,21 @@ async function showQrModalFor(id, displayName, desc = 'فرع تجاري جدي�
       renderInstancesView();
     }
 
+    let pollCount = 0;
     qrPollInterval = setInterval(async () => {
+      // Auto-stop if modal closed or exceeded 40 cycles (100 seconds)
+      const modalEl = document.getElementById('qr-scan-modal');
+      if (!modalEl || !modalEl.classList.contains('active') || pollCount++ > 40) {
+        clearInterval(qrPollInterval);
+        qrPollInterval = null;
+        return;
+      }
+
       try {
         const stateRes = await fetch(`${API_BASE}/instance/connectionState/${id}`, {
           headers: { 'apikey': MASTER_API_KEY }
         });
+        if (!stateRes.ok) return;
         const stateData = await stateRes.json();
         const isConnected = stateData.instance?.state === 'open';
 
@@ -1498,7 +1522,7 @@ function closeQrModal() {
 }
 
 async function restartInstance(id) {
-  showToast(`جاري إعادة تشغيل الانستنس (${id})...`);
+  showToast(`جاري إعادة تشغيل رقم الواتساب (${id})...`);
   try {
     await fetch(`${API_BASE}/instance/restart/${id}`, {
       method: 'POST',
@@ -1509,7 +1533,7 @@ async function restartInstance(id) {
 }
 
 async function deleteInstance(id) {
-  if (confirm(`هل أنت متأكد من حذف الانستنس (${id})؟`)) {
+  if (confirm(`هل أنت متأكد من حذف رقم الواتساب (${id})؟`)) {
     try {
       await fetch(`${API_BASE}/instance/delete/${id}`, {
         method: 'DELETE',
@@ -1522,13 +1546,13 @@ async function deleteInstance(id) {
       woxState.instances.splice(idx, 1);
       renderDashboardData();
       renderInstancesView();
-      showToast(`تم حذف الانستنس (${id})`);
+      showToast(`تم حذف رقم الواتساب (${id})`);
     }
   }
 }
 
 function editInstance(id) {
-  const newName = prompt(`تعديل وصف الانستنس (${id}):`, 'الفرع التجاري الرئيسي');
+  const newName = prompt(`تعديل وصف رقم الواتساب (${id}):`, 'الفرع التجاري الرئيسي');
   if (newName) {
     const inst = woxState.instances.find(i => i.id === id);
     if (inst) {
@@ -1541,7 +1565,7 @@ function editInstance(id) {
 }
 
 function showInstanceOptions(id) {
-  showToast(`الانستنس (${id}) نشط ومتصل بالخادم`);
+  showToast(`رقم الواتساب (${id}) نشط ومتصل بالخادم`);
 }
 
 function filterInstances(filter, btn) {
@@ -2188,3 +2212,786 @@ window.handleLogout = function() {
   localStorage.removeItem('wox_tokens');
   window.location.href = '/login';
 };
+
+// =============================================================================
+// WhatsApp Marketing Campaigns & Anti-Ban Management System
+// =============================================================================
+
+var allCampaigns = [];
+var selectedCampaignInstances = [];
+var campaignRecipientsList = [];
+var currentAudienceSource = 'contacts';
+var activeCampaignFilter = 'all';
+
+// Load Campaigns from Backend
+async function loadCampaigns() {
+  const tenantId = getTenantId();
+  try {
+    const res = await fetch(`/saas/campaigns/${tenantId}`);
+    const json = await res.json();
+    if (json.status === 'success' && Array.isArray(json.data)) {
+      allCampaigns = json.data;
+    } else {
+      allCampaigns = [];
+    }
+  } catch (e) {
+    console.error('Error fetching campaigns:', e);
+    allCampaigns = [];
+  }
+
+  updateCampaignsKPIs();
+  renderCampaignsTable(activeCampaignFilter);
+}
+
+// Update Top KPI Cards
+function updateCampaignsKPIs() {
+  const totalCampEl = document.getElementById('kpi-total-campaigns');
+  const totalSentEl = document.getElementById('kpi-total-sent-messages');
+  const deliveryRateEl = document.getElementById('kpi-delivery-rate');
+  const activeInstEl = document.getElementById('kpi-active-instances-count');
+
+  let totalSent = 0;
+  let totalDelivered = 0;
+
+  allCampaigns.forEach(c => {
+    totalSent += (c.progress && c.progress.sent) || 0;
+    totalDelivered += (c.progress && c.progress.delivered) || 0;
+  });
+
+  if (totalCampEl) totalCampEl.textContent = allCampaigns.length;
+  if (totalSentEl) totalSentEl.textContent = totalSent.toLocaleString();
+  if (deliveryRateEl) {
+    const rate = totalSent > 0 ? Math.round((totalDelivered / totalSent) * 100) : 100;
+    deliveryRateEl.textContent = `${rate}%`;
+  }
+  if (activeInstEl) {
+    const connectedInsts = (window.allInstances || []).filter(i => i.status === 'connected' || i.connectionStatus === 'open');
+    activeInstEl.textContent = connectedInsts.length || 1;
+  }
+}
+
+// Filter Campaigns
+function filterCampaigns(status) {
+  activeCampaignFilter = status;
+  document.querySelectorAll('#campaigns-filter-chips .filter-chip').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  renderCampaignsTable(status);
+}
+
+// Render Campaigns Table
+function renderCampaignsTable(filter = 'all') {
+  const tbody = document.getElementById('campaigns-tbody');
+  const emptyState = document.getElementById('campaigns-empty-state');
+  const table = document.getElementById('campaigns-table');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+
+  const filtered = allCampaigns.filter(c => {
+    if (filter === 'all') return true;
+    return c.status === filter;
+  });
+
+  if (filtered.length === 0) {
+    if (table) table.style.display = 'none';
+    if (emptyState) emptyState.style.display = 'block';
+    return;
+  }
+
+  if (table) table.style.display = 'table';
+  if (emptyState) emptyState.style.display = 'none';
+
+  filtered.forEach(c => {
+    const tr = document.createElement('tr');
+
+    const total = c.total_contacts || (c.recipients ? c.recipients.length : 0);
+    const sent = (c.progress && c.progress.sent) || 0;
+    const percent = total > 0 ? Math.round((sent / total) * 100) : 0;
+
+    // Status Badge & Color
+    let statusBadge = '';
+    if (c.status === 'running') {
+      statusBadge = '<span style="background:#dcfce7; color:#15803d; padding:4px 10px; border-radius:12px; font-weight:700; font-size:12px; display:inline-flex; align-items:center; gap:5px;"><span style="width:7px; height:7px; border-radius:50%; background:#22c55e; animation:pulse 1.2s infinite;"></span> جاري الإرسال</span>';
+    } else if (c.status === 'completed') {
+      statusBadge = '<span style="background:#e0f2fe; color:#0369a1; padding:4px 10px; border-radius:12px; font-weight:700; font-size:12px;">✅ مكتملة</span>';
+    } else if (c.status === 'paused') {
+      statusBadge = '<span style="background:#fef3c7; color:#b45309; padding:4px 10px; border-radius:12px; font-weight:700; font-size:12px;">⏸️ متوقفة</span>';
+    } else if (c.status === 'scheduled') {
+      statusBadge = '<span style="background:#f3e8ff; color:#7e22ce; padding:4px 10px; border-radius:12px; font-weight:700; font-size:12px;">⏰ مجدولة</span>';
+    } else {
+      statusBadge = '<span style="background:#f1f5f9; color:#475569; padding:4px 10px; border-radius:12px; font-weight:700; font-size:12px;">📝 مسودة</span>';
+    }
+
+    // Instances Badges
+    const instancesList = (c.instances || []).map(inst => `<span style="background:#f1f5f9; color:#334155; padding:2px 8px; border-radius:6px; font-size:11.5px; margin:2px; display:inline-block; font-weight:600;">📱 ${inst}</span>`).join('');
+
+    // Actions
+    let actionButtons = '';
+    if (c.status === 'running') {
+      actionButtons += `<button class="btn-text-action" style="color:#b45309; padding:4px 8px; font-size:12px; font-weight:700;" onclick="pauseCampaignAction('${c.id}')" title="إيقاف مؤقت">⏸️ إيقاف</button>`;
+    } else if (c.status === 'paused') {
+      actionButtons += `<button class="btn-text-action" style="color:#15803d; padding:4px 8px; font-size:12px; font-weight:700;" onclick="resumeCampaignAction('${c.id}')" title="استئناف">▶️ استئناف</button>`;
+    } else if (c.status === 'draft') {
+      actionButtons += `<button class="btn-text-action" style="color:#2563eb; padding:4px 8px; font-size:12px; font-weight:700;" onclick="launchCampaignAction('${c.id}')" title="إطلاق">🚀 إطلاق</button>`;
+    }
+    actionButtons += `<button class="btn-text-action" style="color:#ef4444; padding:4px 8px; font-size:12px;" onclick="deleteCampaignAction('${c.id}')" title="حذف">🗑️</button>`;
+
+    tr.innerHTML = `
+      <td>
+        <strong style="font-size:13.5px; color:var(--text-main); display:block;">${escapeHtml(c.name || 'حملة')}</strong>
+        <span style="font-size:11px; color:var(--text-muted); font-family:monospace;">ID: ${c.id}</span>
+      </td>
+      <td>
+        <div style="max-width:200px;">
+          ${instancesList || '<span style="color:var(--text-muted); font-size:12px;">لم تحدد</span>'}
+        </div>
+      </td>
+      <td>
+        <div style="width:160px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; margin-bottom:4px;">
+            <span>${sent} / ${total}</span>
+            <span>${percent}%</span>
+          </div>
+          <div style="width:100%; height:6px; background:#e2e8f0; border-radius:10px; overflow:hidden;">
+            <div style="width:${percent}%; height:100%; background:var(--wox-green); transition:width 0.4s ease;"></div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <span style="font-size:12px; color:#334155; display:block;">⏱️ تأخير ${c.anti_ban ? c.anti_ban.min_delay + '-' + c.anti_ban.max_delay + 'ث' : '15-35ث'}</span>
+        <span style="font-size:11px; color:var(--text-muted);">☕ راحة كل ${c.anti_ban ? c.anti_ban.batch_size : '20'} رسالة</span>
+      </td>
+      <td>
+        <span style="font-size:12px; color:var(--text-main);">${formatDate(c.created_at)}</span>
+        ${c.schedule && c.schedule.type === 'scheduled' && c.schedule.scheduled_at ? `<span style="font-size:11px; color:#7e22ce; display:block;">موعد: ${formatDate(c.schedule.scheduled_at)}</span>` : ''}
+      </td>
+      <td>${statusBadge}</td>
+      <td style="text-align:left; white-space:nowrap;">${actionButtons}</td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+}
+
+// Wizard State and Controls
+function openCampaignWizard() {
+  document.getElementById('campaigns-list-view').style.display = 'none';
+  document.getElementById('campaign-wizard-view').style.display = 'block';
+  document.getElementById('btn-create-campaign-trigger').style.display = 'none';
+  document.getElementById('btn-back-to-campaigns').style.display = 'inline-flex';
+
+  // Reset form inputs
+  document.getElementById('camp-input-name').value = '';
+  document.getElementById('camp-input-template').value = '{مرحباً|أهلاً بك|السلام عليكم} يا {name} 👋\n\nيسعدنا إبلاغك بأن {var1}\nكود الخصم الحصري: *{var2}*\n\nللطلب تفضل بزيارة متجرنا: https://mystore.com';
+  document.getElementById('camp-input-media-url').value = '';
+  campaignRecipientsList = [];
+  selectedCampaignInstances = [];
+
+  populateCampaignInstancesSelector();
+  populateContactsTagFilter();
+  renderRecipientsPreview();
+  goToWizardStep(1);
+}
+
+function showCampaignsList() {
+  document.getElementById('campaigns-list-view').style.display = 'block';
+  document.getElementById('campaign-wizard-view').style.display = 'none';
+  document.getElementById('btn-create-campaign-trigger').style.display = 'inline-flex';
+  document.getElementById('btn-back-to-campaigns').style.display = 'none';
+  loadCampaigns();
+}
+
+function goToWizardStep(stepNum) {
+  // Step 1 Validation
+  if (stepNum > 1) {
+    const name = document.getElementById('camp-input-name').value.trim();
+    if (!name) {
+      showToast('⚠️ يرجى إدخال اسم الحملة أولاً', 'error');
+      return;
+    }
+    if (selectedCampaignInstances.length === 0) {
+      showToast('⚠️ يرجى اختيار رقم واتساب واحد على الأقل', 'error');
+      return;
+    }
+  }
+
+  // Step 2 Validation
+  if (stepNum > 2) {
+    if (campaignRecipientsList.length === 0) {
+      showToast('⚠️ يرجى تحديد جهات الاتصال أو لصق الأرقام المستهدفة', 'error');
+      return;
+    }
+  }
+
+  // Step 3 Validation
+  if (stepNum > 3) {
+    const template = document.getElementById('camp-input-template').value.trim();
+    if (!template) {
+      showToast('⚠️ يرجى كتابة نص الرسالة', 'error');
+      return;
+    }
+  }
+
+  // Activate Wizard Content
+  for (let i = 1; i <= 5; i++) {
+    const content = document.getElementById(`wizard-step-${i}`);
+    const node = document.getElementById(`wizard-node-${i}`);
+    const line = document.getElementById(`wizard-line-${i}`);
+
+    if (content) content.style.display = (i === stepNum) ? 'block' : 'none';
+    if (node) {
+      node.classList.remove('active', 'completed');
+      if (i < stepNum) node.classList.add('completed');
+      if (i === stepNum) node.classList.add('active');
+    }
+    if (line) {
+      line.classList.toggle('active', i < stepNum);
+    }
+  }
+
+  if (stepNum === 3) {
+    updateLivePhonePreview();
+  }
+
+  if (stepNum === 5) {
+    updateCampaignSummary();
+  }
+
+  window.scrollTo({ top: 120, behavior: 'smooth' });
+}
+
+// Instance Selection Logic
+function populateCampaignInstancesSelector() {
+  const container = document.getElementById('camp-instances-selection-container');
+  if (!container) return;
+
+  const instances = window.allInstances || [];
+  container.innerHTML = '';
+
+  if (instances.length === 0) {
+    // Provide a fallback if instances haven't loaded yet
+    instances.push({ name: 'main_whatsapp', status: 'connected', number: '+966501112233' });
+  }
+
+  instances.forEach(inst => {
+    const isConn = inst.status === 'connected' || inst.connectionStatus === 'open';
+    const card = document.createElement('div');
+    card.className = `instance-select-card ${selectedCampaignInstances.includes(inst.name) ? 'selected' : ''}`;
+    card.id = `inst-card-${inst.name}`;
+    card.onclick = () => toggleInstanceForCampaign(inst.name);
+
+    card.innerHTML = `
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:20px;">📱</span>
+        <div>
+          <strong style="font-size:13.5px; display:block;">${inst.name}</strong>
+          <span style="font-size:11.5px; color:${isConn ? '#16a34a' : '#dc2626'};">${isConn ? '● متصل ونشط' : '○ غير متصل'}</span>
+        </div>
+      </div>
+      <input type="checkbox" ${selectedCampaignInstances.includes(inst.name) ? 'checked' : ''} style="accent-color:var(--wox-green); pointer-events:none;">
+    `;
+
+    container.appendChild(card);
+  });
+
+  // Pre-select first connected by default if empty
+  if (selectedCampaignInstances.length === 0 && instances.length > 0) {
+    toggleInstanceForCampaign(instances[0].name);
+  }
+}
+
+function toggleInstanceForCampaign(name) {
+  const idx = selectedCampaignInstances.indexOf(name);
+  if (idx > -1) {
+    selectedCampaignInstances.splice(idx, 1);
+  } else {
+    selectedCampaignInstances.push(name);
+  }
+
+  const card = document.getElementById(`inst-card-${name}`);
+  if (card) {
+    card.classList.toggle('selected', selectedCampaignInstances.includes(name));
+    const checkbox = card.querySelector('input[type="checkbox"]');
+    if (checkbox) checkbox.checked = selectedCampaignInstances.includes(name);
+  }
+}
+
+function selectAllInstancesForCampaign() {
+  const instances = window.allInstances || [];
+  selectedCampaignInstances = instances.map(i => i.name);
+  populateCampaignInstancesSelector();
+  showToast(`تم تحديد ${selectedCampaignInstances.length} أرقام واتساب للتوزيع`);
+}
+
+// Audience Source Switcher
+function setAudienceSource(src) {
+  currentAudienceSource = src;
+  document.querySelectorAll('.import-src-btn').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.getElementById(`src-btn-${src}`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  document.getElementById('audience-box-contacts').style.display = src === 'contacts' ? 'block' : 'none';
+  document.getElementById('audience-box-manual').style.display = src === 'manual' ? 'block' : 'none';
+  document.getElementById('audience-box-csv').style.display = src === 'csv' ? 'block' : 'none';
+
+  if (src === 'contacts') {
+    filterContactsForCampaign();
+  }
+}
+
+function populateContactsTagFilter() {
+  const select = document.getElementById('camp-contacts-tag-filter');
+  if (!select) return;
+
+  const contacts = window.realContactsList || [];
+  const tags = new Set();
+  contacts.forEach(c => {
+    if (c.tag) tags.add(c.tag);
+  });
+
+  select.innerHTML = '<option value="all">جميع جهات الاتصال المسجلة</option>';
+  tags.forEach(t => {
+    select.innerHTML += `<option value="${escapeHtml(t)}">تصنيف: ${escapeHtml(t)}</option>`;
+  });
+
+  filterContactsForCampaign();
+}
+
+function filterContactsForCampaign() {
+  const select = document.getElementById('camp-contacts-tag-filter');
+  const selectedTag = select ? select.value : 'all';
+  const contacts = window.realContactsList || [];
+
+  campaignRecipientsList = contacts.filter(c => {
+    if (selectedTag === 'all') return true;
+    return c.tag === selectedTag;
+  }).map(c => ({
+    phone: c.phone || c.id,
+    name: c.name || 'عميلنا العزيز',
+    var1: c.tag || '',
+    var2: c.country || '',
+  }));
+
+  const badge = document.getElementById('camp-selected-contacts-badge');
+  if (badge) badge.textContent = `${campaignRecipientsList.length} جهة اتصال محددة`;
+
+  renderRecipientsPreview();
+}
+
+function parseManualAudience() {
+  const input = document.getElementById('camp-manual-input').value;
+  const lines = input.split('\n');
+  campaignRecipientsList = [];
+
+  lines.forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed) return;
+
+    const parts = trimmed.split(',').map(p => p.trim());
+    const phone = parts[0];
+    const name = parts[1] || 'عميلنا العزيز';
+    const var1 = parts[2] || '';
+    const var2 = parts[3] || '';
+
+    if (phone && phone.length >= 8) {
+      campaignRecipientsList.push({ phone, name, var1, var2 });
+    }
+  });
+
+  renderRecipientsPreview();
+}
+
+function handleCSVUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const text = evt.target.result;
+    const lines = text.split(/\r\n|\n/);
+    campaignRecipientsList = [];
+
+    // Skip header line if it contains words like 'phone'
+    let startIndex = 0;
+    if (lines[0] && lines[0].toLowerCase().includes('phone')) {
+      startIndex = 1;
+    }
+
+    for (let i = startIndex; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      const parts = line.split(',').map(p => p.trim());
+      const phone = parts[0];
+      const name = parts[1] || 'عميلنا العزيز';
+      const var1 = parts[2] || '';
+      const var2 = parts[3] || '';
+
+      if (phone && phone.length >= 8) {
+        campaignRecipientsList.push({ phone, name, var1, var2 });
+      }
+    }
+
+    renderRecipientsPreview();
+    showToast(`✅ تم استيراد ${campaignRecipientsList.length} جهة اتصال من الملف`);
+  };
+  reader.readAsText(file);
+}
+
+function clearRecipientsList() {
+  campaignRecipientsList = [];
+  const manualInput = document.getElementById('camp-manual-input');
+  if (manualInput) manualInput.value = '';
+  renderRecipientsPreview();
+}
+
+function renderRecipientsPreview() {
+  const countEl = document.getElementById('camp-recipients-count');
+  const tbody = document.getElementById('camp-recipients-preview-tbody');
+  if (countEl) countEl.textContent = campaignRecipientsList.length;
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+
+  if (campaignRecipientsList.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">لا يوجد مستلمون حتى الآن</td></tr>';
+    return;
+  }
+
+  // Display top 20 for preview performance
+  const previewSlice = campaignRecipientsList.slice(0, 20);
+  previewSlice.forEach((r, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${idx + 1}</td>
+      <td style="font-family:monospace; font-weight:700;">${escapeHtml(r.phone)}</td>
+      <td>${escapeHtml(r.name || '-')}</td>
+      <td>${escapeHtml(r.var1 || '-')}</td>
+      <td>${escapeHtml(r.var2 || '-')}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  if (campaignRecipientsList.length > 20) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td colspan="5" style="text-align:center; color:#2563eb; background:#f8fafc; font-weight:600;">... و ${campaignRecipientsList.length - 20} مستلم إضافي في القائمة</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+// Template & Spintax Tools
+function insertTagIntoTemplate(tag) {
+  const textarea = document.getElementById('camp-input-template');
+  if (!textarea) return;
+
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const text = textarea.value;
+
+  textarea.value = text.substring(0, start) + tag + text.substring(end);
+  textarea.focus();
+  textarea.selectionStart = textarea.selectionEnd = start + tag.length;
+
+  updateLivePhonePreview();
+}
+
+function parseSpintax(text) {
+  return text.replace(/\{([^{}]+)\}/g, function(match, contents) {
+    if (contents.includes('|')) {
+      const parts = contents.split('|');
+      return parts[Math.floor(Math.random() * parts.length)].trim();
+    }
+    return match;
+  });
+}
+
+function testSpintaxVariation() {
+  updateLivePhonePreview();
+  showToast('🎲 تم توليد تنويع عشوائي لصياغة Spintax بنجاح');
+}
+
+function updateLivePhonePreview() {
+  const template = document.getElementById('camp-input-template').value;
+  const mediaUrl = document.getElementById('camp-input-media-url').value.trim();
+  const bubbleText = document.getElementById('mockup-rendered-text');
+  const mediaContainer = document.getElementById('mockup-media-container');
+  const mediaImg = document.getElementById('mockup-media-img');
+
+  if (!bubbleText) return;
+
+  // Render sample contact
+  const sample = campaignRecipientsList[0] || {
+    name: 'محمد أحمد',
+    phone: '966501234567',
+    var1: 'خصم 20% على باقة VIP',
+    var2: 'WOX2026',
+  };
+
+  let rendered = template
+    .replace(/{name}/g, sample.name)
+    .replace(/{phone}/g, sample.phone)
+    .replace(/{var1}/g, sample.var1)
+    .replace(/{var2}/g, sample.var2);
+
+  // Parse Spintax
+  rendered = parseSpintax(rendered);
+
+  bubbleText.textContent = rendered || 'اكتب نص الرسالة لتظهر المعاينة هنا...';
+
+  // Handle Media Preview
+  if (mediaUrl) {
+    if (mediaContainer) mediaContainer.style.display = 'block';
+    if (mediaImg) mediaImg.src = mediaUrl;
+  } else {
+    if (mediaContainer) mediaContainer.style.display = 'none';
+  }
+
+  // Update Mockup Timestamp
+  const timeEl = document.getElementById('mockup-timestamp');
+  if (timeEl) {
+    const d = new Date();
+    timeEl.textContent = `${d.getHours()}:${d.getMinutes() < 10 ? '0' : ''}${d.getMinutes()}`;
+  }
+}
+
+// Step 5 Controls & Execution
+function toggleScheduleInput(isScheduled) {
+  const container = document.getElementById('camp-schedule-datetime-container');
+  if (container) container.style.display = isScheduled ? 'block' : 'none';
+}
+
+function updateCampaignSummary() {
+  const name = document.getElementById('camp-input-name').value;
+  const minDelay = parseInt(document.getElementById('camp-antiban-min-delay').value) || 15;
+  const maxDelay = parseInt(document.getElementById('camp-antiban-max-delay').value) || 35;
+  const batchSize = parseInt(document.getElementById('camp-antiban-batch-size').value) || 20;
+  const cooldown = parseInt(document.getElementById('camp-antiban-cooldown').value) || 3;
+
+  const total = campaignRecipientsList.length;
+  const avgDelay = Math.round((minDelay + maxDelay) / 2);
+
+  // Estimated minutes: (total * avgDelay + (total/batchSize)*cooldown*60) / 60
+  const batchesCount = Math.floor(total / batchSize);
+  const totalSeconds = (total * avgDelay) + (batchesCount * cooldown * 60);
+  const estimatedMinutes = Math.max(1, Math.round(totalSeconds / 60));
+
+  const nameEl = document.getElementById('summary-camp-name');
+  const countEl = document.getElementById('summary-recipients-count');
+  const instCountEl = document.getElementById('summary-instances-count');
+  const avgDelayEl = document.getElementById('summary-avg-delay');
+  const cooldownEl = document.getElementById('summary-cooldown');
+  const estTimeEl = document.getElementById('summary-estimated-time');
+
+  if (nameEl) nameEl.textContent = name;
+  if (countEl) countEl.textContent = `${total} مستلم`;
+  if (instCountEl) instCountEl.textContent = `${selectedCampaignInstances.length} أرقام (${selectedCampaignInstances.join(', ')})`;
+  if (avgDelayEl) avgDelayEl.textContent = `${avgDelay} ثانية عشوائياً`;
+  if (cooldownEl) cooldownEl.textContent = `كل ${batchSize} رسالة / ${cooldown} دقائق`;
+  if (estTimeEl) estTimeEl.textContent = `~ ${estimatedMinutes} دقيقة تقريباً`;
+}
+
+async function sendCampaignTestSample() {
+  const testPhone = document.getElementById('camp-test-phone').value.trim();
+  const template = document.getElementById('camp-input-template').value.trim();
+  const mediaUrl = document.getElementById('camp-input-media-url').value.trim();
+  const mediaType = document.getElementById('camp-input-media-type').value;
+  const resultBox = document.getElementById('camp-test-result-box');
+
+  if (!testPhone) {
+    showToast('⚠️ يرجى إدخال رقم هاتفك أولاً لتجربة الرسالة', 'error');
+    return;
+  }
+
+  if (selectedCampaignInstances.length === 0) {
+    showToast('⚠️ لم يتم اختيار أي رقم واتساب', 'error');
+    return;
+  }
+
+  if (resultBox) {
+    resultBox.style.display = 'block';
+    resultBox.style.background = '#f1f5f9';
+    resultBox.style.color = '#334155';
+    resultBox.innerHTML = '⏳ جاري إرسال الرسالة التجريبية مع استبدال المتغيرات و Spintax...';
+  }
+
+  try {
+    const res = await fetch('/saas/campaigns/test-send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phone: testPhone,
+        instance_name: selectedCampaignInstances[0],
+        template: template,
+        media_url: mediaUrl || null,
+        media_type: mediaType,
+        sample_name: 'مدير النظام (تجربة)',
+        sample_var1: 'عرض خاص تجريبي',
+        sample_var2: 'TEST2026',
+      }),
+    });
+
+    const json = await res.json();
+    if (json.status === 'success') {
+      if (resultBox) {
+        resultBox.style.background = '#dcfce7';
+        resultBox.style.color = '#15803d';
+        resultBox.innerHTML = `✅ <strong>تم تسليم الرسالة التجريبية بنجاح!</strong><br/><div style="margin-top:6px; font-style:italic;">"${escapeHtml(json.rendered_text || '')}"</div>`;
+      }
+      showToast('✅ تم إرسال الرسالة التجريبية إلى هاتفك بنجاح');
+    } else {
+      if (resultBox) {
+        resultBox.style.background = '#fee2e2';
+        resultBox.style.color = '#dc2626';
+        resultBox.innerHTML = `❌ <strong>فشل الإرسال:</strong> ${escapeHtml(json.message || 'خطأ في السيرفر')}`;
+      }
+    }
+  } catch (e) {
+    if (resultBox) {
+      resultBox.style.background = '#fee2e2';
+      resultBox.style.color = '#dc2626';
+      resultBox.innerHTML = `❌ خطأ في الاتصال بالسيرفر.`;
+    }
+  }
+}
+
+async function saveCampaignAsDraft() {
+  await createOrUpdateCampaign('draft');
+  showToast('💾 تم حفظ الحملة كمسودة بنجاح');
+  showCampaignsList();
+}
+
+async function executeLaunchCampaign() {
+  const isScheduled = document.querySelector('input[name="camp_launch_type"]:checked').value === 'scheduled';
+  const scheduleTime = document.getElementById('camp-schedule-datetime').value;
+
+  if (isScheduled && !scheduleTime) {
+    showToast('⚠️ يرجى تحديد تاريخ ووقت الجدولة', 'error');
+    return;
+  }
+
+  const status = isScheduled ? 'scheduled' : 'running';
+  const campaign = await createOrUpdateCampaign(status, scheduleTime);
+
+  if (campaign && campaign.id) {
+    if (!isScheduled) {
+      try {
+        const tenantId = getTenantId();
+        await fetch(`/saas/campaigns/${tenantId}/${campaign.id}/launch`, { method: 'POST' });
+        showToast('🚀 انطلقت الحملة بنجاح مع تفعيل درع مكافحة الحظر!');
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      showToast('⏰ تم جدولة الحملة بنجاح في الموعد المحدد');
+    }
+    showCampaignsList();
+  }
+}
+
+async function createOrUpdateCampaign(status = 'draft', scheduledAt = null) {
+  const tenantId = getTenantId();
+  const name = document.getElementById('camp-input-name').value.trim();
+  const template = document.getElementById('camp-input-template').value.trim();
+  const mediaUrl = document.getElementById('camp-input-media-url').value.trim();
+  const mediaType = document.getElementById('camp-input-media-type').value;
+
+  const minDelay = parseInt(document.getElementById('camp-antiban-min-delay').value) || 15;
+  const maxDelay = parseInt(document.getElementById('camp-antiban-max-delay').value) || 35;
+  const batchSize = parseInt(document.getElementById('camp-antiban-batch-size').value) || 20;
+  const cooldown = parseInt(document.getElementById('camp-antiban-cooldown').value) || 3;
+  const typing = document.getElementById('camp-antiban-typing').checked;
+  const rotation = document.getElementById('camp-antiban-rotation').checked;
+
+  const payload = {
+    name: name,
+    instances: selectedCampaignInstances,
+    template: template,
+    media_url: mediaUrl || null,
+    media_type: mediaType,
+    recipients: campaignRecipientsList,
+    status: status,
+    anti_ban: {
+      min_delay: minDelay,
+      max_delay: maxDelay,
+      batch_size: batchSize,
+      cooldown_minutes: cooldown,
+      simulate_typing: typing,
+      rotate_instances: rotation,
+    },
+    schedule: {
+      type: scheduledAt ? 'scheduled' : 'instant',
+      scheduled_at: scheduledAt || null,
+    },
+  };
+
+  try {
+    const res = await fetch(`/saas/campaigns/${tenantId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const json = await res.json();
+    return json.data;
+  } catch (e) {
+    console.error('Save campaign error:', e);
+    showToast('❌ حدث خطأ أثناء حفظ الحملة', 'error');
+    return null;
+  }
+}
+
+async function pauseCampaignAction(id) {
+  const tenantId = getTenantId();
+  try {
+    const res = await fetch(`/saas/campaigns/${tenantId}/${id}/pause`, { method: 'POST' });
+    const json = await res.json();
+    if (json.status === 'success') {
+      showToast('⏸️ تم إيقاف الحملة مؤقتاً');
+      loadCampaigns();
+    }
+  } catch (e) {
+    showToast('خطأ في إيقاف الحملة', 'error');
+  }
+}
+
+async function resumeCampaignAction(id) {
+  const tenantId = getTenantId();
+  try {
+    const res = await fetch(`/saas/campaigns/${tenantId}/${id}/resume`, { method: 'POST' });
+    const json = await res.json();
+    if (json.status === 'success') {
+      showToast('▶️ تم استئناف إرسال الحملة');
+      loadCampaigns();
+    }
+  } catch (e) {
+    showToast('خطأ في استئناف الحملة', 'error');
+  }
+}
+
+async function launchCampaignAction(id) {
+  const tenantId = getTenantId();
+  try {
+    const res = await fetch(`/saas/campaigns/${tenantId}/${id}/launch`, { method: 'POST' });
+    const json = await res.json();
+    if (json.status === 'success') {
+      showToast('🚀 تم إطلاق الحملة بنجاح');
+      loadCampaigns();
+    }
+  } catch (e) {
+    showToast('خطأ في إطلاق الحملة', 'error');
+  }
+}
+
+async function deleteCampaignAction(id) {
+  if (!confirm('هل أنت متأكد من رغبتك في حذف هذه الحملة الإعلانية؟')) return;
+  const tenantId = getTenantId();
+  try {
+    const res = await fetch(`/saas/campaigns/${tenantId}/${id}`, { method: 'DELETE' });
+    const json = await res.json();
+    if (json.status === 'success') {
+      showToast('🗑️ تم حذف الحملة بنجاح');
+      loadCampaigns();
+    }
+  } catch (e) {
+    showToast('خطأ في حذف الحملة', 'error');
+  }
+}
+
